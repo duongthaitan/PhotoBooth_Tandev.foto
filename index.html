@@ -4468,25 +4468,57 @@
           });
         }
 
-        // --- Chức năng Chụp ảnh từ webcam ---
-        document
-          .getElementById("captureBtn")
-          .addEventListener("click", async () => {
-            cameraModal.classList.remove("hidden");
-            try {
-              const stream = await navigator.mediaDevices.getUserMedia({
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// --- Chức năng Chụp ảnh từ webcam ---
+document
+    .getElementById("captureBtn")
+    .addEventListener("click", async () => {
+        cameraModal.classList.remove("hidden");
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({
                 video: { facingMode: currentFacingMode },
-              });
-              cameraVideo.srcObject = stream;
-              videoStream = stream;
-            } catch (err) {
-              console.error("Lỗi truy cập camera: ", err);
-              showNotification(
+            });
+            cameraVideo.srcObject = stream;
+            cameraVideo.play(); // SỬA LỖI: Thêm dòng này để đảm bảo video phát
+            videoStream = stream;
+        } catch (err) {
+            console.error("Lỗi truy cập camera: ", err);
+            showNotification(
                 "Không thể truy cập camera. Vui lòng kiểm tra quyền truy cập.",
                 true
-              );
-            }
-          });
+            );
+        }
+    });
 
         document.getElementById("closeCamera").addEventListener("click", () => {
           cameraModal.classList.add("hidden");
@@ -4563,6 +4595,46 @@
           }, 1000);
         }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
         // Cập nhật logic cho chức năng chụp Photobooth
         function takePhotoboothSeries() {
           // Xóa các khung ảnh hiện tại và tạo 4 khung ảnh trống mới
