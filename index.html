@@ -3465,7 +3465,7 @@
                 stroke-width="2"
                 d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path>
             </svg>
-            Xem trước ảnh
+            Chụp ảnh
           </h3>
           <button
             id="closeCamera"
@@ -3486,22 +3486,32 @@
         </div>
 
         <div class="p-6">
-          <div class="relative w-full h-64 md:h-96 bg-black rounded-lg flex items-center justify-center">
-            <canvas id="cameraCanvas" class="w-full h-full object-contain rounded-lg"></canvas>
-            
-            <video id="cameraVideo" class="hidden" autoplay playsinline></video>
-            
-            <div id="cameraLoading" class="absolute inset-0 flex flex-col items-center justify-center text-white bg-black bg-opacity-70 rounded-lg">
-                <div class="loading-spinner w-8 h-8 border-4 border-t-red-500"></div>
-                <p class="mt-3 text-sm">Đang bật camera...</p>
-            </div>
-            
+          <div class="relative">
+            <video
+              id="cameraVideo"
+              class="w-full h-64 md:h-96 bg-black object-cover rounded-lg"
+              autoplay></video>
+            <div
+              id="cameraFilterPreview"
+              class="absolute inset-0 pointer-events-none rounded-lg"></div>
             <div
               id="cameraCountdown"
               class="absolute inset-0 flex items-center justify-center text-white text-6xl font-bold hidden bg-black bg-opacity-50 rounded-lg"></div>
             <div
               id="photoboothCountdown"
               class="absolute inset-0 flex items-center justify-center text-white text-6xl font-bold hidden bg-black bg-opacity-50 rounded-lg"></div>
+
+            <div
+              class="absolute top-4 left-4 bg-black bg-opacity-50 text-white px-3 py-1 rounded-full text-xs flex items-center">
+              <span
+                class="w-2 h-2 bg-red-500 rounded-full mr-2 animate-pulse"></span>
+              REC
+            </div>
+
+            <div
+              class="absolute top-4 right-4 bg-black bg-opacity-50 text-white px-3 py-1 rounded-full text-xs">
+              FUJIFILM
+            </div>
           </div>
 
           <div class="mt-6 flex flex-wrap justify-center gap-3">
@@ -3515,7 +3525,11 @@
                   stroke="currentColor"
                   viewBox="0 0 24 24"
                   xmlns="http://www.w3.org/2000/svg">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h5M20 20v-5h-5M4 20h5v-5M20 4h-5v5"></path>
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M8 7v4a1 1 0 001 1h4a1 1 0 001-1V7m-4 8v2m4-2v2m-6 0h6a2 2 0 002-2V7a2 2 0 00-2-2H8a2 2 0 00-2 2v6a2 2 0 002 2zm0 0H6v-6h2v6z"></path>
                 </svg>
                 Chuyển Camera
               </button>
@@ -3534,11 +3548,20 @@
                   stroke="currentColor"
                   viewBox="0 0 24 24"
                   xmlns="http://www.w3.org/2000/svg">
-                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path>
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path>
                 </svg>
-                Dùng ảnh này
+                Chụp 1 ảnh
               </button>
-              <span class="tooltiptext">Sử dụng ảnh xem trước này</span>
+              <span class="tooltiptext">Chụp một tấm ảnh duy nhất</span>
             </div>
 
             <div class="tooltip">
@@ -3551,1654 +3574,1637 @@
                   stroke="currentColor"
                   viewBox="0 0 24 24"
                   xmlns="http://www.w3.org/2000/svg">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
                 </svg>
                 Chụp Photobooth
               </button>
-              <span class="tooltiptext">Chụp 4 ảnh liên tiếp (Chế độ Live)</span>
+              <span class="tooltiptext">Chụp 4 ảnh liên tiếp</span>
             </div>
           </div>
         </div>
       </div>
     </div>
 
-    <script>
-     document.addEventListener("DOMContentLoaded", () => {
-      /* --- Nâng cấp Dark Mode / Light Mode Toggle Script --- */
-      const themeToggleBtn = document.getElementById("theme-toggle");
-
-      function applyTheme(theme) {
-        const isDark = theme === "dark";
-        document.body.classList.toggle("dark", isDark);
-        themeToggleBtn.classList.toggle("loading", true);
-        setTimeout(() => {
-          themeToggleBtn.classList.toggle("loading", false);
-          const newText = isDark
-            ? "Đã chuyển sang Chế độ tối."
-            : "Đã chuyển sang Chế độ sáng.";
-          showNotification(newText, false);
-        }, 400);
-      }
-
-      const currentTheme = localStorage.getItem("theme");
-      if (currentTheme) {
-        applyTheme(currentTheme);
-      }
-
-      themeToggleBtn.addEventListener("click", () => {
-        const currentMode = document.body.classList.contains("dark")
-          ? "light"
-          : "dark";
-        applyTheme(currentMode);
-        localStorage.setItem("theme", currentMode);
-      });
-
-      // --- Biến toàn cục và Element cache ---
-      let currentActiveFrameId = "frame-1";
-      const galleryContainer = document.getElementById("galleryContainer");
-      const cameraVideo = document.getElementById("cameraVideo");
-      const cameraModal = document.getElementById("cameraModal");
-      const cameraCountdown = document.getElementById("cameraCountdown");
-      const photoboothCountdown = document.getElementById(
-        "photoboothCountdown"
-      );
-      const closeCamera = document.getElementById("closeCamera");
-      let videoStream;
-      let currentFacingMode = "user";
-      let isEditingAllFrames = false;
-
-      const flashEffectDiv = document.getElementById("flash");
-      const notificationDiv = document.getElementById("notification");
-      const notificationMessageSpan = notificationDiv.querySelector("span");
-
-      const allFramesCheckboxes = {
-        filters: document.getElementById("selectAllFrames"),
-        effects: document.getElementById("selectAllEffects"),
-      };
-      const allFramesCheckboxContainers = {
-        filters: allFramesCheckboxes.filters.closest(".custom-checkbox"),
-        effects: allFramesCheckboxes.effects.closest(".custom-checkbox"),
-      };
-
-      // Biến và elements cho chức năng tách nền
-      const REMOVE_BG_API_KEY = "yCBhn44BZg4aGEC3quegGbe1"; // Thay bằng API Key của bạn
-      const removeBgBtn = document.getElementById("removeBgBtn");
-      const removeBgBtnText = document.getElementById("removeBgBtnText");
-      const removeBgSpinner = document.getElementById("removeBgSpinner");
-      const backgroundOptionsDiv =
-        document.getElementById("backgroundOptions");
-      const backgroundOptionInputs = document.querySelectorAll(
-        '#backgroundOptions input[name="bg-option"]'
-      );
-
-      let originalImageSrc = null;
-      let currentRemovedBgImageSrc = null;
-
-      // --- Helper Functions ---
-      function showNotification(
-        message = "Thao tác thành công!",
-        isError = false
-      ) {
-        notificationMessageSpan.textContent = message;
-        notificationDiv.style.backgroundColor = isError ? "#dc3545" : "#333";
-        notificationDiv.classList.add("show");
-        setTimeout(() => {
-          notificationDiv.classList.remove("show");
-        }, 3000);
-      }
-
-      function triggerFlash() {
-        flashEffectDiv.classList.add("flash-animation");
-        flashEffectDiv.addEventListener(
-          "animationend",
-          () => {
-            flashEffectDiv.classList.remove("flash-animation");
-          },
-          { once: true }
-        );
-      }
-
-      // --- Quản lý Active Frame (Khung ảnh đang chỉnh sửa) ---
-      function getTargetFrames() {
-        if (isEditingAllFrames) {
-          const frames = Array.from(
-            document.querySelectorAll(".film-frame")
-          ).filter((frame) => frame.querySelector("img"));
-          if (frames.length === 0) {
-            showNotification("Không có ảnh nào để chỉnh sửa.", true);
-          }
-          return frames;
-        } else {
-          const activeFrame = document.getElementById(currentActiveFrameId);
-          return activeFrame && activeFrame.querySelector("img")
-            ? [activeFrame]
-            : [];
-        }
-      }
-
-      function setActiveFrame(frameId) {
-        document.querySelectorAll(".film-frame").forEach((frame) => {
-          frame.classList.remove("active-edit-frame");
-          frame.classList.remove("selected-all");
-        });
-        const newActiveFrame = document.getElementById(frameId);
-        if (newActiveFrame) {
-          newActiveFrame.classList.add("active-edit-frame");
-          currentActiveFrameId = frameId;
-        } else {
-          currentActiveFrameId = null;
-        }
-      }
-
-      // Cập nhật lại khung "Nhấp để thêm ảnh" ban đầu
-      function createPlaceholderFrame(id) {
-        const newFrame = document.createElement("div");
-        newFrame.className = "film-frame";
-        newFrame.id = id;
-        newFrame.innerHTML = `
-          <div class="film-strip">
-              <div class="film-hole"></div><div class="film-hole"></div><div class="film-hole"></div><div class="film-hole"></div>
-          </div>
-          <div class="image-placeholder">
-              <svg class="w-16 h-16 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-              </svg>
-              <span class="image-placeholder-text">Nhấp để thêm ảnh</span>
-          </div>
-          <div class="film-strip">
-              <div class="film-hole"></div><div class="film-hole"></div><div class="film-hole"></div><div class="film-hole"></div>
-          </div>
-        `;
-        const placeholder = newFrame.querySelector(".image-placeholder");
-        setupPlaceholder(placeholder);
-        setupImageActions(newFrame);
-        return newFrame;
-      }
-
-      // Tạo 4 khung ảnh placeholder mặc định
-      function createDefaultPlaceholders() {
-        galleryContainer.innerHTML = "";
-        for (let i = 0; i < 4; i++) {
-          const frameId = `frame-${i}`;
-          galleryContainer.appendChild(createPlaceholderFrame(frameId));
-        }
-        // Đặt khung thứ 2 làm khung active mặc định như trong code ban đầu
-        setActiveFrame("frame-1");
-      }
-
-      // --- Chức năng tải ảnh cho Placeholder ---
-      function setupPlaceholder(placeholder) {
-        placeholder.addEventListener("click", (event) => {
-          const input = document.createElement("input");
-          input.type = "file";
-          input.accept = "image/*";
-          input.onchange = (e) => {
-            const file = e.target.files[0];
-            if (file) {
-              const reader = new FileReader();
-              reader.onload = (event) => {
-                const parentFrame = placeholder.closest(".film-frame");
-                if (parentFrame) {
-                  const imageContainer = document.createElement("div");
-                  imageContainer.className = "image-container";
-                  imageContainer.innerHTML = `
-                                <img src="${
-                                  event.target.result
-                                }" alt="User image" class="edited-image">
-                                <div class="film-date">${new Date()
-                                  .toISOString()
-                                  .slice(0, 10)}</div>
-                                <div class="film-brand">FUJIFILM</div>
-                                <div class="image-actions">
-                                    <button class="action-btn edit-btn" title="Chỉnh sửa">
-                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path>
-                                        </svg>
-                                    </button>
-                                    <button class="action-btn delete-btn" title="Xóa">
-                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
-                                        </svg>
-                                    </button>
-                                </div>
-                              `;
-                  placeholder.replaceWith(imageContainer);
-                  setupImageActions(imageContainer.closest(".film-frame"));
-                  showNotification("Đã tải ảnh lên thành công!");
-                  setActiveFrame(parentFrame.id);
-                }
-              };
-              reader.readAsDataURL(file);
-            }
-          };
-          input.click();
-        });
-      }
-
-      // --- Xử lý sự kiện cho các nút hành động trên ảnh ---
-      function setupImageActions(frame) {
-        const deleteBtn = frame.querySelector(".delete-btn");
-        if (deleteBtn) {
-          deleteBtn.addEventListener("click", handleDeleteButtonClick);
-        }
-        const editBtn = frame.querySelector(".edit-btn");
-        if (editBtn) {
-          editBtn.addEventListener("click", (e) => {
-            e.stopPropagation();
-            setActiveFrame(frame.id);
-            showNotification(`Đang chỉnh sửa khung: ${frame.id}`);
-          });
-        }
-        frame.addEventListener("click", (e) => {
-          if (!isEditingAllFrames) {
-            setActiveFrame(frame.id);
-          }
-        });
-      }
-
-      document
-        .querySelectorAll(".image-placeholder")
-        .forEach(setupPlaceholder);
-      document.querySelectorAll(".film-frame").forEach(setupImageActions);
-
-      // --- Chức năng Xóa Khung Ảnh ---
-      function handleDeleteButtonClick(event) {
-        event.stopPropagation();
-        if (confirm("Bạn có chắc chắn muốn xóa khung ảnh này không?")) {
-          const frameToRemove = event.currentTarget.closest(".film-frame");
-          if (frameToRemove) {
-            const nextFrame =
-              frameToRemove.nextElementSibling ||
-              galleryContainer.firstElementChild;
-            frameToRemove.remove();
-            showNotification("Đã xóa khung ảnh!");
-            if (frameToRemove.id === currentActiveFrameId) {
-              currentActiveFrameId = null;
-              if (nextFrame) {
-                setActiveFrame(nextFrame.id);
-              }
-            }
-          }
-        }
-      }
-
-      // --- Chức năng Thêm Khung Mới ---
-      document.getElementById("addFrameBtn").addEventListener("click", () => {
-        const newFrameId = `frame-${Date.now()}`;
-        const newFrameHTML = `
-          <div class="film-frame" id="${newFrameId}">
-              <div class="film-strip">
-                  <div class="film-hole"></div><div class="film-hole"></div><div class="film-hole"></div><div class="film-hole"></div>
-              </div>
-              <div class="image-placeholder">
-                  <svg class="w-16 h-16 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                  </svg>
-                  <span class="image-placeholder-text">Nhấp để thêm ảnh</span>
-              </div>
-              <div class="film-strip">
-                  <div class="film-hole"></div><div class="film-hole"></div><div class="film-hole"></div><div class="film-hole"></div>
-              </div>
-          </div>
-        `;
-        galleryContainer.insertAdjacentHTML("beforeend", newFrameHTML);
-        showNotification("Đã thêm khung ảnh mới!");
-        const newFrame = document.getElementById(newFrameId);
-        setupPlaceholder(newFrame.querySelector(".image-placeholder"));
-        setupImageActions(newFrame);
-        setActiveFrame(newFrameId);
-      });
-
-      // --- Chức năng Xóa Tất Cả Khung Ảnh và tạo lại 4 khung mặc định ---
-      document.getElementById("clearAllBtn").addEventListener("click", () => {
-        if (
-          confirm("Bạn có chắc chắn muốn xóa tất cả các khung ảnh không?")
-        ) {
-          clearAllAndAddPlaceholders();
-          showNotification(
-            "Đã xóa tất cả khung ảnh và tạo lại 4 khung mặc định!"
-          );
-        }
-      });
-
-      function clearAllAndAddPlaceholders() {
-        // Xóa tất cả khung hiện tại
-        galleryContainer.innerHTML = "";
-        // Thêm 4 khung mặc định vào lại
-        createDefaultPlaceholders();
-        currentActiveFrameId = null;
-      }
-
-      // --- Chức năng Chuyển đổi Bố cục ---
-      document
-        .getElementById("layoutSelector")
-        .addEventListener("change", function () {
-          const layout = this.value;
-          galleryContainer.classList.remove(
-            "grid",
-            "grid-cols-2",
-            "gap-6",
-            "flex",
-            "flex-col",
-            "flex-row",
-            "overflow-x-auto",
-            "pb-4",
-            "collage-layout",
-            "filmstrip-container"
-          );
-          galleryContainer.style.height = "";
-
-          document.querySelectorAll(".film-frame").forEach((frame) => {
-            frame.classList.remove("polaroid");
-            frame.style.width = "";
-            frame.style.gridColumn = "";
-            frame.style.gridRow = "";
-          });
-
-          switch (layout) {
-            case "grid":
-              galleryContainer.classList.add("grid", "grid-cols-2", "gap-6");
-              break;
-            case "vertical":
-              galleryContainer.classList.add("flex", "flex-col", "gap-6");
-              break;
-            case "horizontal":
-              galleryContainer.classList.add(
-                "flex",
-                "flex-row",
-                "gap-6",
-                "overflow-x-auto",
-                "pb-4",
-                "filmstrip-container"
-              );
-              break;
-            case "collage":
-              galleryContainer.classList.add("collage-layout");
-              galleryContainer.style.height = "600px";
-              break;
-            case "filmstrip":
-              galleryContainer.classList.add("filmstrip-container");
-              document
-                .querySelectorAll(".film-frame")
-                .forEach((frame) => frame.classList.add("filmstrip-layout"));
-              break;
-            case "polaroid":
-              galleryContainer.classList.add("grid", "grid-cols-2", "gap-6");
-              document
-                .querySelectorAll(".film-frame")
-                .forEach((frame) => frame.classList.add("polaroid"));
-              break;
-          }
-          showNotification(`Đã đổi bố cục sang ${layout}!`);
-        });
-
-      // --- Chức năng Áp dụng Bộ lọc (Filters) ---
-      const filters = {
-        none: "",
-        provia: "contrast(1.15) brightness(1) saturate(1.1)",
-        velvia: "contrast(1.3) brightness(1) saturate(1.5)",
-        astia: "contrast(1) brightness(1.05) saturate(0.9)",
-        "classic-chrome":
-          "contrast(1.1) brightness(0.95) saturate(0.75) sepia(0.1)",
-        acros: "contrast(1.2) brightness(1) saturate(0) sepia(0.05)",
-        monochrome: "grayscale(1) contrast(1.2)",
-        sepia: "sepia(0.8) contrast(1.1)",
-        "pro-neg-hi": "contrast(1.1) brightness(1) saturate(0.9)",
-        "pro-neg-std": "contrast(1) brightness(1) saturate(0.8)",
-        eterna: "contrast(0.9) brightness(1.05) saturate(0.85)",
-        classic: "contrast(1.1) brightness(1.1) saturate(1.3) sepia(0.2)",
-      };
-
-      document
-        .querySelectorAll("#filtersTab .filter-option")
-        .forEach((filterOption) => {
-          filterOption.addEventListener("click", () => {
-            const targetFrames = getTargetFrames();
-            if (targetFrames.length === 0) {
-              showNotification(
-                "Vui lòng chọn một khung ảnh hoặc tất cả khung hình để áp dụng bộ lọc.",
-                true
-              );
-              return;
-            }
-
-            document
-              .querySelectorAll("#filtersTab .filter-option")
-              .forEach((opt) => opt.classList.remove("active"));
-            filterOption.classList.add("active");
-
-            const filterValue = filterOption.dataset.filter;
-            targetFrames.forEach((frame) => {
-              const img = frame.querySelector(".image-container img");
-              if (img) {
-                img.style.filter = filters[filterValue];
-              }
-            });
-
-            showNotification(
-              `Đã áp dụng bộ lọc ${filterValue} cho ${
-                isEditingAllFrames ? "tất cả" : "khung hình đang chọn"
-              }!`
-            );
-          });
-        });
-
-      // --- Chức năng Điều chỉnh Hiệu ứng (Effects) ---
-      const grainSlider = document.getElementById("grainSlider");
-      const grainValueSpan = document.getElementById("grainValue");
-      const grainProgressBar = document.getElementById("grainProgress");
-
-      const leakSlider = document.getElementById("leakSlider");
-      const leakValueSpan = document.getElementById("leakValue");
-      const leakProgressBar = document.getElementById("leakProgress");
-
-      const vignetteSlider = document.getElementById("vignetteSlider");
-      const vignetteValueSpan = document.getElementById("vignetteValue");
-      const vignetteProgressBar = document.getElementById("vignetteProgress");
-
-      function applyCombinedEffects() {
-        const targetFrames = getTargetFrames();
-        if (targetFrames.length === 0) return;
-
-        const grain = parseFloat(grainSlider.value);
-        const leak = parseFloat(leakSlider.value);
-        const vignette = parseFloat(vignetteSlider.value);
-
-        targetFrames.forEach((frame) => {
-          const imgContainer = frame.querySelector(".image-container");
-          const img = imgContainer ? imgContainer.querySelector("img") : null;
-          if (!img) return;
-
-          [".grain-overlay", ".leak-overlay", ".vignette-overlay"].forEach(
-            (sel) => {
-              const overlay = imgContainer.querySelector(sel);
-              if (overlay) overlay.remove();
-            }
-          );
-
-          if (grain > 0) {
-            const grainOverlay = document.createElement("div");
-            grainOverlay.className = "effect-overlay grain-overlay";
-            grainOverlay.style.background = `url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/38AAwAB/9oB7QAAAABJRU5ErkJggg==) repeat`;
-            grainOverlay.style.backgroundSize = "2px 2px";
-            grainOverlay.style.opacity = (grain / 100) * 0.4;
-            imgContainer.appendChild(grainOverlay);
-          }
-
-          if (leak > 0) {
-            const leakOverlay = document.createElement("div");
-            leakOverlay.className = "effect-overlay leak-overlay";
-            leakOverlay.style.background = `radial-gradient(ellipse at 80% 20%, rgba(255,165,0,0.5) 0%, transparent 70%)`;
-            leakOverlay.style.opacity = leak / 100;
-            imgContainer.appendChild(leakOverlay);
-          }
-
-          if (vignette > 0) {
-            const vignetteOverlay = document.createElement("div");
-            vignetteOverlay.className = "effect-overlay vignette-overlay";
-            vignetteOverlay.style.boxShadow = `inset 0 0 ${
-              vignette * 0.5
-            }px ${vignette * 0.2}px rgba(0,0,0,0.8)`;
-            imgContainer.appendChild(vignetteOverlay);
-          }
-        });
-        showNotification(
-          `Đã điều chỉnh hiệu ứng cho ${
-            isEditingAllFrames ? "tất cả" : "khung hình đang chọn"
-          }!`
-        );
-      }
-
-      grainSlider.addEventListener("input", function () {
-        grainValueSpan.textContent = this.value + "%";
-        grainProgressBar.style.width = this.value + "%";
-        applyCombinedEffects();
-      });
-
-      leakSlider.addEventListener("input", function () {
-        leakValueSpan.textContent = this.value + "%";
-        leakProgressBar.style.width = this.value + "%";
-        applyCombinedEffects();
-      });
-
-      vignetteSlider.addEventListener("input", function () {
-        vignetteValueSpan.textContent = this.value + "%";
-        vignetteProgressBar.style.width = this.value + "%";
-        applyCombinedEffects();
-      });
-
-      // --- Chức năng Tùy chỉnh Kiểu khung ---
-      document.querySelectorAll(".frame-type-btn").forEach((btn) => {
-        btn.addEventListener("click", () => {
-          document
-            .querySelectorAll(".frame-type-btn")
-            .forEach((b) => b.classList.remove("active"));
-          btn.classList.add("active");
-          const frameType = btn.dataset.frame;
-          document.querySelectorAll(".film-frame").forEach((frame) => {
-            frame.classList.remove("polaroid");
-            frame.style.padding = "";
-            frame.style.backgroundColor = "";
-
-            const filmStripTop = frame.querySelector(
-              ".film-strip:first-of-type"
-            );
-            const filmStripBottom = frame.querySelector(
-              ".film-strip:last-of-type"
-            );
-            const imageContainer = frame.querySelector(".image-container");
-
-            if (filmStripTop) filmStripTop.style.display = "none";
-            if (filmStripBottom) filmStripBottom.style.display = "none";
-            if (imageContainer) imageContainer.style.borderRadius = "4px";
-
-            if (frameType === "film") {
-              if (filmStripTop) filmStripTop.style.display = "flex";
-              if (filmStripBottom) filmStripBottom.style.display = "flex";
-              if (imageContainer) imageContainer.style.borderRadius = "0";
-            } else if (frameType === "polaroid") {
-              frame.classList.add("polaroid");
-              frame.style.paddingBottom = "40px";
-              frame.style.backgroundColor = "white";
-            } else if (frameType === "border") {
-              frame.style.padding = "20px";
-              frame.style.backgroundColor = "white";
-            } else if (frameType === "none") {
-              frame.style.padding = "0";
-              frame.style.backgroundColor = "white";
-            }
-            updateFilmDetailsVisibility();
-          });
-          showNotification(`Đã đổi kiểu khung thành ${frameType}!`);
-        });
-      });
-
-      // --- Chức năng Tùy chỉnh Màu khung ---
-      document.querySelectorAll(".frame-color-btn").forEach((btn) => {
-        btn.addEventListener("click", () => {
-          document
-            .querySelectorAll(".frame-color-btn")
-            .forEach((b) => b.classList.remove("active"));
-          btn.classList.add("active");
-          const color = btn.dataset.color;
-          document.querySelectorAll(".film-frame").forEach((frame) => {
-            frame.style.backgroundColor = "";
-            if (color === "white") {
-              frame.style.backgroundColor = "white";
-            } else if (color === "black") {
-              frame.style.backgroundColor = "black";
-            } else if (color === "gold") {
-              frame.style.backgroundColor = "gold";
-            } else if (color === "vintage") {
-              frame.style.backgroundColor = "#F5E3D1";
-            }
-          });
-          showNotification(`Đã đổi màu khung thành ${color}!`);
-        });
-      });
-
-      // --- Chức năng Chú thích (Text) ---
-      const captionTextarea = document.getElementById("captionText");
-      const fontSelector = document.getElementById("fontSelector");
-      const textColorBtns = document.querySelectorAll(".text-color-btn");
-      const textPositionBtns =
-        document.querySelectorAll(".text-position-btn");
-      const textSizeBtns = document.querySelectorAll(".text-size-btn");
-      const applyTextBtn = document.getElementById("applyTextBtn");
-      const textPreviewSpan = document
-        .getElementById("textPreview")
-        .querySelector("span");
-
-      let currentTextSettings = {
-        text: "Tandev.foto Studio",
-        font: "'Courier Prime', monospace",
-        color: "white",
-        position: "bottom",
-        size: "medium",
-      };
-
-      function updateTextPreview() {
-        textPreviewSpan.textContent =
-          captionTextarea.value || "Tandev.foto Studio";
-        textPreviewSpan.style.fontFamily = fontSelector.value;
-        textPreviewSpan.style.color = document.querySelector(
-          ".text-color-btn.active"
-        ).dataset.color;
-        let fontSize;
-        switch (
-          document.querySelector(".text-size-btn.active").dataset.size
-        ) {
-          case "small":
-            fontSize = "12px";
-            break;
-          case "medium":
-            fontSize = "16px";
-            break;
-          case "large":
-            fontSize = "20px";
-            break;
-          default:
-            fontSize = "16px";
-        }
-        textPreviewSpan.style.fontSize = fontSize;
-      }
-
-      captionTextarea.addEventListener("input", () => {
-        currentTextSettings.text = captionTextarea.value;
-        updateTextPreview();
-      });
-      fontSelector.addEventListener("change", () => {
-        currentTextSettings.font = fontSelector.value;
-        updateTextPreview();
-      });
-      textColorBtns.forEach((btn) => {
-        btn.addEventListener("click", () => {
-          textColorBtns.forEach((b) => b.classList.remove("active"));
-          btn.classList.add("active");
-          currentTextSettings.color = btn.dataset.color;
-          updateTextPreview();
-        });
-      });
-      textSizeBtns.forEach((btn) => {
-        btn.addEventListener("click", () => {
-          textSizeBtns.forEach((b) => b.classList.remove("active"));
-          btn.classList.add("active");
-          currentTextSettings.size = btn.dataset.size;
-          updateTextPreview();
-        });
-      });
-      textPositionBtns.forEach((btn) => {
-        btn.addEventListener("click", () => {
-          textPositionBtns.forEach((b) => b.classList.remove("active"));
-          btn.classList.add("active");
-          currentTextSettings.position = btn.dataset.position;
-        });
-      });
-
-      applyTextBtn.addEventListener("click", () => {
-        const targetFrames = getTargetFrames();
-        if (targetFrames.length === 0) {
-          showNotification(
-            "Vui lòng chọn một khung ảnh hoặc tất cả khung hình để thêm chú thích.",
-            true
-          );
-          return;
-        }
-
-        targetFrames.forEach((activeFrame) => {
-          const imageContainer = activeFrame
-            ? activeFrame.querySelector(".image-container")
-            : null;
-          if (imageContainer) {
-            let captionElement =
-              imageContainer.querySelector(".image-caption");
-            if (!captionElement) {
-              captionElement = document.createElement("div");
-              captionElement.className =
-                "image-caption absolute text-center w-full p-2 pointer-events-none";
-              imageContainer.appendChild(captionElement);
-            }
-            captionElement.textContent = currentTextSettings.text;
-            captionElement.style.fontFamily = currentTextSettings.font;
-            captionElement.style.color = currentTextSettings.color;
-            let fontSize;
-            switch (currentTextSettings.size) {
-              case "small":
-                fontSize = "12px";
-                break;
-              case "medium":
-                fontSize = "16px";
-                break;
-              case "large":
-                fontSize = "20px";
-                break;
-            }
-            captionElement.style.fontSize = fontSize;
-
-            captionElement.style.top = "";
-            captionElement.style.bottom = "";
-            captionElement.style.left = "";
-            captionElement.style.right = "";
-            captionElement.style.transform = "";
-
-            switch (currentTextSettings.position) {
-              case "top":
-                captionElement.style.top = "10px";
-                break;
-              case "middle":
-                captionElement.style.top = "50%";
-                captionElement.style.transform = "translateY(-50%)";
-                break;
-              case "bottom":
-                captionElement.style.bottom = "10px";
-                break;
-            }
-          }
-        });
-        showNotification(
-          `Đã áp dụng chú thích cho ${
-            isEditingAllFrames ? "tất cả" : "khung hình đang chọn"
-          }!`
-        );
-      });
-
-      // --- Chức năng Thêm và Quản lý Sticker ---
-      const stickerData = {
-        heart: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#ff4d6d"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>`,
-        star: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#ffd700"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>`,
-        smile: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#ffcc00"><circle cx="12" cy="12" r="10" fill="#ffcc00"/><path d="M8 14s1.5 2 4 2 4-2 4-2" stroke="#000" stroke-width="1" fill="none"/><circle cx="9" cy="9" r="1.5" fill="#000"/><circle cx="15" cy="9" r="1.5" fill="#000"/></svg>`,
-        camera: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#333"><path d="M9 3L7.17 5H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2h-3.17L15 3H9zm3 15c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z"/><circle cx="12" cy="13" r="3"/></svg>`,
-        location: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#ff4d4d"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>`,
-        like: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#3b82f6"><path d="M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-1.91l-.01-.01L23 10z"/></svg>`,
-        fire: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#ff7700"><path d="M13.5.67s.74 2.65.74 4.8c0 2.06-1.35 3.73-3.41 3.73-2.07 0-3.63-1.67-3.63-3.73l.03-.36C5.21 7.51 4 10.62 4 14c0 4.42 3.58 8 8 8s8-3.58 8-8C20 8.61 17.41 3.8 13.5.67zM11.71 19c-1.78 0-3.22-1.4-3.22-3.14 0-1.62 1.05-2.76 2.81-3.12 1.77-.36 3.6-1.21 4.62-2.58.39 1.29.59 2.65.59 4.04 0 2.65-2.15 4.8-4.8 4.8z"/></svg>`,
-        music: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#9333ea"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>`,
-        sun: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#fbbf24"><path d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.79 1.42-1.41zM4 10.5H1v2h3v-2zm9-9.95h-2V3.5h2V.55zm7.45 3.91l-1.41-1.41-1.79 1.79 1.41 1.41 1.79-1.79zm-3.21 13.7l1.79 1.8 1.41-1.41-1.8-1.79-1.4 1.4zM20 10.5v2h3v-2h-3zm-8-5c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm-1 16.95h2V19.5h-2v2.95zm-7.45-3.91l1.41 1.41 1.79-1.8-1.41-1.41-1.79 1.8z"/></svg>`,
-        sparkles: `<svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="#a855f7"><path d="M11 2a1 1 0 0 1 2 0v5h5a1 1 0 0 1 0 2h-5v5a1 1 0 0 1-2 0v-5H4a1 1 0 0 1 0-2h5V2zm10 13a1 1 0 0 1-2 0v-2a1 1 0 0 1 2 0v2zm-2-6a1 1 0 0 1 0 2h-2a1 1 0 0 1 0-2h2zm-2 6a1 1 0 0 1 0 2h-2a1 1 0 0 1 0-2h2zm-4 4a1 1 0 0 1 0 2h-2a1 1 0 0 1 0-2h2zm-4-4a1 1 0 0 1 0 2H9a1 1 0 0 1 0-2h2zm-2-4a1 1 0 0 1 0 2H7a1 1 0 0 1 0-2h2zM3 13a1 1 0 0 1 2 0v2a1 1 0 0 1-2 0v-2zM3 9a1 1 0 0 1 2 0v2a1 1 0 0 1-2 0V9zM7 5a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2h2z"></path></svg>`,
-        "cloud-lightning": `<svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="#60a5fa"><path d="M19.34 8c-1.55-3.32-5.18-5.32-8.5-4.5-3.23.8-5.46 4.14-4.5 7.42-.51 1.09-.84 2.3-.92 3.58-.09 1.1.28 2.2.97 3.03.68.83 1.63 1.3 2.62 1.34h9.11c2.14.28 3.99-1.39 4.27-3.53.28-2.14-1.39-3.99-3.53-4.27zM11 12l-4 7h6l-3-6h3l-3-5z"></path></svg>`,
-        coffee: `<svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="#9333ea"><path d="M18.5 12a2.5 2.5 0 0 0 0-5H18V4H6v3h.5a2.5 2.5 0 0 0 0 5H6v9h12v-9h.5zM16 19H8v-7h8v7zm-.5-5a.5.5 0 0 1-.5-.5.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5.5.5 0 0 1-.5.5h-2z"></path></svg>`,
-        peace: `<svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="#a78bfa"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zM12 5l-7 7.01h14L12 5zm-7 8l-3 3.01H22l-3-3.01H5z"></path></svg>`,
-        ghost: `<svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="#e2e8f0"><path d="M12 2C6.48 2 2 6.48 2 12c0 3.86 2.05 7.23 5.12 9.07l.88-1.53c-2.31-1.32-3.9-3.96-3.9-6.54 0-4.41 3.59-8 8-8s8 3.59 8 8c0 2.58-1.59 5.22-3.9 6.54l.88 1.53C20.95 19.23 23 15.86 23 12c0-5.52-4.48-10-10-10zm-4 8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm8 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"></path></svg>`,
-        cool: `<svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="#0ea5e9"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14c-1.92 0-3.64-1.11-4.47-2.71l-.1-.2-.1-.21c-.81-1.61-.83-3.52-.06-5.11l.24-.5.17-.3c.75-1.37 2.06-2.28 3.51-2.28h.01c.2 0 .4.02.59.07l.1.02.21.05c1.61.35 2.87 1.8 2.87 3.5H12c0 1.93-1.57 3.5-3.5 3.5zm7-4h-2c-1.1 0-2 .9-2 2s.9 2 2 2h2v1H8v-1c-1.66 0-3-1.34-3-3s1.34-3 3-3h7c1.66 0 3 1.34 3 3s-1.34 3-3 3z"></path></svg>`,
-        "cat-hat": `https://i.imgur.com/uT25c0x.png`,
-        "cat-heart": `https://i.imgur.com/X4yK67s.png`,
-        "cat-blush": `https://i.imgur.com/iR37yYt.png`,
-        "cat-glasses": `https://i.imgur.com/vHq9q2d.png`,
-        "cat-cute": `https://i.imgur.com/cE5aG1m.png`,
-      };
-
-      document.querySelectorAll(".sticker-item").forEach((stickerItem) => {
-        stickerItem.addEventListener("click", () => {
-          if (!currentActiveFrameId) {
-            showNotification(
-              "Vui lòng chọn một khung ảnh để thêm sticker.",
-              true
-            );
-            return;
-          }
-          const activeFrame = document.getElementById(currentActiveFrameId);
-          const imageContainer = activeFrame
-            ? activeFrame.querySelector(".image-container")
-            : null;
-          if (imageContainer && imageContainer.querySelector("img")) {
-            const stickerType = stickerItem.dataset.sticker;
-            const newSticker = document.createElement("div");
-            newSticker.className = "sticker";
-
-            let stickerContent;
-            if (stickerData[stickerType].startsWith("<svg")) {
-              stickerContent = stickerData[stickerType];
-            } else {
-              stickerContent = `<img src="${stickerData[stickerType]}" alt="${stickerType}" class="w-16 h-16 object-contain">`;
-            }
-
-            newSticker.innerHTML =
-              stickerContent +
-              `
-                  <div class="sticker-handle">
-                      <svg class="w-3 h-3 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-5v4m0 0h-4m4 0l-5-5M4 16v4m0 0h4m-4 0l5-5m11 5v-4m0 0h-4m4 0l-5 5"></path>
-                      </svg>
-                  </div>
-                  <button class="sticker-remove">X</button>
-                `;
-
-            newSticker.style.width = "64px";
-            newSticker.style.height = "64px";
-            newSticker.style.left = "calc(50% - 32px)";
-            newSticker.style.top = "calc(50% - 32px)";
-            imageContainer.appendChild(newSticker);
-            showNotification(`Đã thêm sticker ${stickerType}!`);
-
-            setupStickerInteractions(newSticker, imageContainer);
-          } else {
-            showNotification(
-              "Vui lòng chọn một khung ảnh CÓ ẢNH để thêm sticker.",
-              true
-            );
-          }
-        });
-      });
-
-      function setupStickerInteractions(sticker, container) {
-        let isDragging = false;
-        let isResizing = false;
-        let offsetX, offsetY;
-        let initialWidth, initialHeight;
-        let initialX, initialY;
-
-        const handle = sticker.querySelector(".sticker-handle");
-        const removeBtn = sticker.querySelector(".sticker-remove");
-
-        const startInteraction = (e) => {
-          const event = e.touches ? e.touches[0] : e;
-          const rect = sticker.getBoundingClientRect();
-          if (e.target === handle || e.target.closest(".sticker-handle")) {
-            isResizing = true;
-            initialWidth = rect.width;
-            initialHeight = rect.height;
-            initialX = event.clientX;
-            initialY = event.clientY;
-          } else if (
-            e.target !== removeBtn &&
-            e.target.closest(".sticker") === sticker
-          ) {
-            isDragging = true;
-            offsetX = event.clientX - rect.left;
-            offsetY = event.clientY - rect.top;
-            sticker.style.cursor = "grabbing";
-          }
-          sticker.style.transition = "none";
-          e.preventDefault();
-        };
-
-        const moveInteraction = (e) => {
-          const event = e.touches ? e.touches[0] : e;
-          if (isDragging) {
-            const containerRect = container.getBoundingClientRect();
-            let newLeft = event.clientX - containerRect.left - offsetX;
-            let newTop = event.clientY - containerRect.top - offsetY;
-
-            newLeft = Math.max(
-              0,
-              Math.min(newLeft, containerRect.width - sticker.offsetWidth)
-            );
-            newTop = Math.max(
-              0,
-              Math.min(newTop, containerRect.height - sticker.offsetHeight)
-            );
-
-            sticker.style.left = `${newLeft}px`;
-            sticker.style.top = `${newTop}px`;
-          } else if (isResizing) {
-            const deltaX = event.clientX - initialX;
-            const deltaY = event.clientY - initialY;
-            const newSize = Math.max(
-              30,
-              Math.min(initialWidth + deltaX, initialHeight + deltaY)
-            );
-            sticker.style.width = `${newSize}px`;
-            sticker.style.height = `${newSize}px`;
-          }
-        };
-
-        const endInteraction = () => {
-          isDragging = false;
-          isResizing = false;
-          sticker.style.cursor = "grab";
-          sticker.style.transition = "transform 0.2s";
-        };
-
-        sticker.addEventListener("mousedown", startInteraction);
-        sticker.addEventListener("touchstart", startInteraction);
-        document.addEventListener("mousemove", moveInteraction);
-        document.addEventListener("touchmove", moveInteraction);
-        document.addEventListener("mouseup", endInteraction);
-        document.addEventListener("touchend", endInteraction);
-        removeBtn.addEventListener("click", (e) => {
-          e.stopPropagation();
-          sticker.remove();
-          showNotification("Đã xóa sticker!");
-        });
-      }
-
-    // --- Chức năng Chụp ảnh từ webcam ---
-    // Lấy thêm element canvas và loading
-    const cameraCanvas = document.getElementById("cameraCanvas");
-    const cameraLoading = document.getElementById("cameraLoading");
-    const ctx = cameraCanvas.getContext("2d");
-
-    // Hàm mới: Bật camera, chụp 1 khung hình rồi tắt
-    async function startCameraAndCaptureFrame() {
-        if (videoStream) {
-            videoStream.getTracks().forEach((track) => track.stop());
-        }
-
-        cameraLoading.classList.remove("hidden");
-        ctx.clearRect(0, 0, cameraCanvas.width, cameraCanvas.height); // Xóa canvas cũ
-
-        try {
-            const stream = await navigator.mediaDevices.getUserMedia({
-                video: { facingMode: currentFacingMode },
-            });
-            videoStream = stream;
-            cameraVideo.srcObject = stream;
-
-            // Thêm sự kiện onplaying để đảm bảo video đã sẵn sàng trước khi chụp
-            cameraVideo.onplaying = () => {
-                // Đặt kích thước canvas bằng kích thước video
-                cameraCanvas.width = cameraVideo.videoWidth;
-                cameraCanvas.height = cameraVideo.videoHeight;
-                
-                // Vẽ khung hình hiện tại của video lên canvas
-                ctx.drawImage(cameraVideo, 0, 0, cameraCanvas.width, cameraCanvas.height);
-                
-                // Dừng tất cả các luồng video để tắt camera
-                stream.getTracks().forEach(track => track.stop());
-                
-                // Ẩn loading đi
-                cameraLoading.classList.add("hidden");
-                
-                // Bỏ sự kiện để không bị gọi lại
-                cameraVideo.onplaying = null; 
-            };
-
-        } catch (err) {
-            console.error("Lỗi truy cập camera: ", err);
-            showNotification("Không thể truy cập camera. Vui lòng kiểm tra quyền truy cập.", true);
-            cameraLoading.classList.add("hidden");
-            closeCamera.click();
-        }
-    }
-    
-    // CHỈNH SỬA LỚN: Nút captureBtn giờ chỉ mở modal và gọi hàm chụp 1 khung hình
-    document
-        .getElementById("captureBtn")
-        .addEventListener("click", () => {
-            cameraModal.classList.remove("hidden");
-            startCameraAndCaptureFrame();
-        });
-
-    closeCamera.addEventListener("click", () => {
-        cameraModal.classList.add("hidden");
-        if (videoStream) {
-            videoStream.getTracks().forEach((track) => track.stop());
-        }
-    });
-
-    // CHỈNH SỬA: Nút chuyển camera sẽ gọi lại hàm chụp 1 khung hình
-    document
-        .getElementById("switchCameraBtn")
-        .addEventListener("click", () => {
-            currentFacingMode = currentFacingMode === "user" ? "environment" : "user";
-            startCameraAndCaptureFrame();
-            showNotification(`Đã chuyển sang camera ${currentFacingMode === "user" ? "trước" : "sau"}`);
-        });
-    
-    // CHỈNH SỬA: Hàm captureFrame giờ sẽ lấy ảnh từ canvas tĩnh
-    function captureFrame() {
-        if (cameraCanvas.width > 0 && cameraCanvas.height > 0) {
-             return cameraCanvas.toDataURL("image/png");
-        }
-        return null; // Trả về null nếu canvas trống
-    }
-
-    // Chức năng "Dùng ảnh này" (trước đây là takePhotoBtn)
-    document.getElementById("takePhotoBtn").addEventListener("click", () => {
-        const imageDataUrl = captureFrame();
-        if (imageDataUrl) {
-            processPhoto(imageDataUrl);
-            closeCamera.click(); // Đóng modal sau khi chọn ảnh
-        } else {
-            showNotification("Chưa có ảnh xem trước để sử dụng.", true);
-        }
-    });
-
-    // Chức năng chụp Photobooth (vẫn giữ chế độ live)
-    document
-        .getElementById("takePhotoboothBtn")
-        .addEventListener("click", () => {
-            // Photobooth cần chế độ live, nên ta sẽ tạm thời bật lại
-            cameraModal.classList.remove("hidden");
-            startLiveCameraForPhotobooth();
-        });
-        
-    async function startLiveCameraForPhotobooth() {
-         if (videoStream) {
-            videoStream.getTracks().forEach((track) => track.stop());
-        }
-        cameraLoading.classList.remove("hidden");
-         try {
-            const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: currentFacingMode } });
-            videoStream = stream;
-            cameraVideo.srcObject = stream;
-            cameraVideo.onplaying = () => {
-                cameraLoading.classList.add("hidden");
-                // Chạy chuỗi chụp photobooth sau khi camera live
-                takePhotoboothSeries();
-                cameraVideo.onplaying = null;
-            }
-        } catch (err) {
-             showNotification("Lỗi bật camera cho Photobooth.", true);
-             cameraLoading.classList.add("hidden");
-        }
-    }
-
-    function takePhotoboothSeries() {
-        galleryContainer.innerHTML = "";
-        for (let i = 0; i < 4; i++) {
-            const newFrame = createPlaceholderFrame(`frame-photobooth-${i}`);
-            galleryContainer.appendChild(newFrame);
-        }
-
-        photoboothCountdown.classList.remove("hidden");
-        let photoCount = 0;
-        const totalPhotos = 4;
-        const countdownInterval = 3000;
-
-        const captureSinglePhotoboothFrame = () => {
-             const canvas = document.createElement("canvas");
-             canvas.width = cameraVideo.videoWidth;
-             canvas.height = cameraVideo.videoHeight;
-             const context = canvas.getContext("2d");
-             context.drawImage(cameraVideo, 0, 0, canvas.width, canvas.height);
-             return canvas.toDataURL("image/png");
-        }
-
-        const timer = setInterval(() => {
-            if (photoCount < totalPhotos) {
-                photoboothCountdown.textContent = 3 - (photoCount % 3); // Đếm ngược 3, 2, 1
-                 setTimeout(() => {
-                    triggerFlash();
-                    const imageDataUrl = captureSinglePhotoboothFrame();
-                    const targetFrameId = `frame-photobooth-${photoCount}`;
-                    processPhoto(imageDataUrl, targetFrameId);
-                    photoCount++;
-                }, 1000); 
-            } else {
-                clearInterval(timer);
-                photoboothCountdown.classList.add("hidden");
-                showNotification("Hoàn thành chụp photobooth!", false);
-                closeCamera.click();
-            }
-        }, countdownInterval);
-    }
-
-    // Cập nhật logic processPhoto để có thể chỉ định khung ảnh đích
-    function processPhoto(imageDataUrl, frameId = null) {
-        let targetFrame = frameId
-            ? document.getElementById(frameId)
-            : document.getElementById(currentActiveFrameId);
-        let placeholder = targetFrame
-            ? targetFrame.querySelector(".image-placeholder")
-            : null;
-
-        if (!targetFrame || !placeholder) {
-            // Tìm một placeholder trống
-            const emptyPlaceholder = document.querySelector(".image-placeholder");
-            if (emptyPlaceholder) {
-                targetFrame = emptyPlaceholder.closest(".film-frame");
-                placeholder = emptyPlaceholder;
-            } else {
-                 // Nếu không còn, tạo khung mới
-                document.getElementById("addFrameBtn").click();
-                targetFrame = galleryContainer.lastElementChild;
-                placeholder = targetFrame.querySelector(".image-placeholder");
-            }
-        }
-
-        if (placeholder) {
-            const imageContainer = document.createElement("div");
-            imageContainer.className = "image-container";
-            imageContainer.innerHTML = `
-                <img src="${imageDataUrl}" alt="Ảnh chụp" class="edited-image">
-                <div class="film-date">${new Date().toISOString().slice(0, 10)}</div>
-                <div class="film-brand">FUJIFILM</div>
-                <div class="image-actions">
-                    <button class="action-btn edit-btn" title="Chỉnh sửa">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
-                    </button>
-                    <button class="action-btn delete-btn" title="Xóa">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
-                    </button>
-                </div>
-            `;
-            placeholder.replaceWith(imageContainer);
-            setupImageActions(imageContainer.closest(".film-frame"));
-            setActiveFrame(targetFrame.id);
-            showNotification("Đã thêm ảnh vào khung!");
-            updateFilmDetailsVisibility();
-        }
-    }
-
-      // --- Chức năng Tải xuống (Download) ---
-      document.getElementById("downloadBtn").addEventListener("click", () => {
-        const targetElement = document.getElementById("galleryContainer");
-        if (!targetElement.children.length) {
-          showNotification("Không có ảnh nào để tải xuống.", true);
-          return;
-        }
-
-        const originalState = {
-          filmBrands: [],
-          filmDates: [],
-        };
-        const showBrandChecked =
-          document.getElementById("showBrandCheckbox").checked;
-        const showDateChecked =
-          document.getElementById("showDateCheckbox").checked;
-
-        const actionButtons =
-          targetElement.querySelectorAll(".image-actions");
-        actionButtons.forEach((btn) => (btn.style.display = "none"));
-
-        const filmBrands = targetElement.querySelectorAll(".film-brand");
-        filmBrands.forEach((el) => {
-          originalState.filmBrands.push(el.style.display);
-          el.style.display = showBrandChecked ? "block" : "none";
-        });
-
-        const filmDates = targetElement.querySelectorAll(".film-date");
-        filmDates.forEach((el) => {
-          originalState.filmDates.push(el.style.display);
-          el.style.display = showDateChecked ? "block" : "none";
-        });
-
-        showNotification("Đang chuẩn bị tải xuống ảnh...", false);
-
-        html2canvas(targetElement, {
-          scale: 2,
-          useCORS: true,
-          logging: true,
-          allowTaint: true,
-        })
-          .then((canvas) => {
-            actionButtons.forEach((btn) => (btn.style.display = "flex"));
-            filmBrands.forEach(
-              (el, index) =>
-                (el.style.display = originalState.filmBrands[index])
-            );
-            filmDates.forEach(
-              (el, index) =>
-                (el.style.display = originalState.filmDates[index])
-            );
-
-            const link = document.createElement("a");
-            link.download = `tandev-foto-studio-collection-${Date.now()}.png`;
-            link.href = canvas.toDataURL("image/png");
-            link.click();
-            showNotification("Bộ sưu tập đã được tải xuống thành công!");
-          })
-          .catch((error) => {
-            console.error("Lỗi khi tạo ảnh:", error);
-            actionButtons.forEach((btn) => (btn.style.display = "flex"));
-            filmBrands.forEach(
-              (el, index) =>
-                (el.style.display = originalState.filmBrands[index])
-            );
-            filmDates.forEach(
-              (el, index) =>
-                (el.style.display = originalState.filmDates[index])
-            );
-            showNotification("Lỗi khi tạo ảnh. Vui lòng thử lại.", true);
-          });
-      });
-
-      // --- Chức năng Hiển thị Ngày tháng và Nhãn Fujifilm ---
-      const showDateCheckbox = document.getElementById("showDateCheckbox");
-      const showBrandCheckbox = document.getElementById("showBrandCheckbox");
-
-      function updateFilmDetailsVisibility() {
-        const filmDates = document.querySelectorAll(".film-date");
-        const filmBrands = document.querySelectorAll(".film-brand");
-
-        filmDates.forEach((el) => {
-          el.style.display = showDateCheckbox.checked ? "block" : "none";
-        });
-        filmBrands.forEach((el) => {
-          el.style.display = showBrandCheckbox.checked ? "block" : "none";
-        });
-      }
-
-      showDateCheckbox.addEventListener(
-        "change",
-        updateFilmDetailsVisibility
-      );
-      showBrandCheckbox.addEventListener(
-        "change",
-        updateFilmDetailsVisibility
-      );
-      updateFilmDetailsVisibility();
-
-      // Cập nhật preview của filter khi hình ảnh được tải
-      function updateFilterPreviews() {
-        const firstImage = galleryContainer.querySelector(".edited-image");
-        if (firstImage) {
-          const firstImageUrl = firstImage.src;
-          document.querySelectorAll(".filter-preview").forEach((preview) => {
-            preview.style.backgroundImage = `url('${firstImageUrl}')`;
-          });
-        }
-      }
-
-      const observer = new MutationObserver((mutations) => {
-        mutations.forEach((mutation) => {
-          if (
-            mutation.type === "childList" ||
-            mutation.type === "attributes"
-          ) {
-            updateFilterPreviews();
-          }
-        });
-      });
-
-      observer.observe(galleryContainer, {
-        childList: true,
-        subtree: true,
-        attributes: true,
-      });
-
-      // --- Tab Switching Logic ---
-      document.querySelectorAll(".tab-btn").forEach((button) => {
-        button.addEventListener("click", () => {
-          document.querySelectorAll(".tab-btn").forEach((btn) => {
-            btn.classList.remove("active", "text-red-500", "border-red-500");
-            btn.classList.add("border-transparent", "hover:text-gray-600");
-          });
-          document
-            .querySelectorAll(".tab-content")
-            .forEach((content) => content.classList.remove("active"));
-          button.classList.add("active", "text-red-500", "border-red-500");
-          button.classList.remove(
-            "border-transparent",
-            "hover:text-gray-600"
-          );
-          document
-            .getElementById(button.dataset.tab + "Tab")
-            .classList.add("active");
-          showNotification(
-            `Đã chuyển sang tab ${button.textContent.trim()}!`
-          );
-        });
-      });
-
-      // --- Final Initialization ---
-      document
-        .querySelector('#filtersTab .filter-option[data-filter="none"]')
-        .click();
-      updateTextPreview();
-
-      document.querySelector('.frame-type-btn[data-frame="film"]').click();
-      document.querySelector('.frame-color-btn[data-color="white"]').click();
-
-      // --- Chức năng Chia sẻ ---
-      const shareBtn = document.getElementById("shareBtn");
-      const shareModal = document.getElementById("shareModal");
-      const closeShareModal = document.getElementById("closeShareModal");
-      const shareLoading = document.getElementById("shareLoading");
-      const shareContent = document.getElementById("shareContent");
-      const qrcodeDiv = document.getElementById("qrcode");
-      const shareFacebookBtn = document.getElementById("shareFacebook");
-      const shareZaloBtn = document.getElementById("shareZalo");
-      const shareEmailBtn = document.getElementById("shareEmail");
-      const copyLinkBtn = document.getElementById("copyLinkBtn");
-      let shareImageUrl = "";
-
-      async function createShareImage() {
-        const targetElement = document.getElementById("galleryContainer");
-        if (!targetElement.children.length) {
-          showNotification("Không có ảnh nào để chia sẻ.", true);
-          return;
-        }
-
-        shareModal.classList.remove("hidden");
-        shareContent.classList.add("hidden");
-        shareLoading.classList.remove("hidden");
-
-        // Tạm ẩn các nút và chi tiết không mong muốn trước khi chụp ảnh
-        const actionButtons =
-          targetElement.querySelectorAll(".image-actions");
-        const originalActionDisplays = Array.from(actionButtons).map(
-          (btn) => btn.style.display
-        );
-        actionButtons.forEach((btn) => (btn.style.display = "none"));
-        const filmDetails = targetElement.querySelectorAll(
-          ".film-date, .film-brand"
-        );
-        const originalDetailDisplays = Array.from(filmDetails).map(
-          (el) => el.style.display
-        );
-        filmDetails.forEach((el) => (el.style.display = "block"));
-
-        // Lấy màu nền của body để đảm bảo ảnh chụp không bị trong suốt
-        const originalBgColor = document.body.style.backgroundColor;
-        document.body.style.backgroundColor =
-          document.body.classList.contains("dark") ? "#1a1a1a" : "#f8f9fa";
-
-        try {
-          const canvas = await html2canvas(targetElement, {
-            scale: 2,
-            useCORS: true,
-            logging: true,
-            allowTaint: true,
-          });
-
-          // Khôi phục trạng thái ban đầu sau khi chụp ảnh
-          actionButtons.forEach(
-            (btn, index) =>
-              (btn.style.display = originalActionDisplays[index])
-          );
-          filmDetails.forEach(
-            (el, index) => (el.style.display = originalDetailDisplays[index])
-          );
-          document.body.style.backgroundColor = originalBgColor;
-
-          shareLoading.classList.add("hidden");
-          shareContent.classList.remove("hidden");
-
-          return canvas;
-        } catch (error) {
-          console.error("Lỗi khi tạo ảnh:", error);
-          actionButtons.forEach(
-            (btn, index) =>
-              (btn.style.display = originalActionDisplays[index])
-          );
-          filmDetails.forEach(
-            (el, index) => (el.style.display = originalDetailDisplays[index])
-          );
-          document.body.style.backgroundColor = originalBgColor;
-          shareLoading.classList.add("hidden");
-          shareModal.classList.add("hidden");
-          showNotification("Lỗi khi tạo ảnh. Vui lòng thử lại.", true);
-          return null;
-        }
-      }
-
-      shareBtn.addEventListener("click", async () => {
-        const canvas = await createShareImage();
-        if (!canvas) return;
-
-        const shareDataUrl = canvas.toDataURL("image/png");
-        shareImageUrl = shareDataUrl;
-
-        // Xử lý chia sẻ qua QR code và copy link
-        qrcodeDiv.innerHTML = "";
-        new QRCode(qrcodeDiv, {
-          text: shareDataUrl,
-          width: 180,
-          height: 180,
-          colorDark: "#000000",
-          colorLight: "#ffffff",
-          correctLevel: QRCode.CorrectLevel.H,
-        });
-
-        // Gắn sự kiện copy link vào nút
-        copyLinkBtn.onclick = () => {
-          navigator.clipboard
-            .writeText(shareDataUrl)
-            .then(() => showNotification("Đã sao chép link ảnh thành công!"))
-            .catch(() =>
-              showNotification(
-                "Lỗi khi sao chép link. Vui lòng thử lại.",
-                true
-              )
-            );
-        };
-
-        // Chức năng chia sẻ qua email
-        const emailSubject = encodeURIComponent(
-          "Bộ sưu tập ảnh film của tôi"
-        );
-        const emailBody = encodeURIComponent(
-          `Chào bạn,\n\nĐây là bộ sưu tập ảnh film độc đáo của tôi được tạo từ Tandev.foto Studio.\n\nBạn có thể tải ảnh này xuống bằng cách quét mã QR hoặc truy cập đường link dưới đây:\n\n${shareDataUrl}\n\nChúc bạn vui vẻ!`
-        );
-        shareEmailBtn.href = `mailto:?subject=${emailSubject}&body=${emailBody}`;
-
-        // Thông báo đã sẵn sàng
-        showNotification("Đã sẵn sàng để chia sẻ!");
-
-        // Gắn sự kiện chia sẻ qua Facebook và Zalo
-        // Các nền tảng này thường không hỗ trợ chia sẻ Data URL trực tiếp,
-        // nên chúng ta sẽ tạo một chức năng để người dùng tải ảnh về trước
-        // rồi tự chia sẻ lên mạng xã hội. Hoặc bạn có thể triển khai thêm
-        // một API backend để lưu ảnh và tạo ra một URL công khai.
-        shareFacebookBtn.onclick = () => {
-          alert(
-            "Để chia sẻ lên Facebook, bạn vui lòng Tải xuống ảnh rồi đăng thủ công lên trang cá nhân hoặc hội nhóm."
-          );
-        };
-
-        shareZaloBtn.onclick = () => {
-          alert(
-            "Để chia sẻ qua Zalo, bạn vui lòng Tải xuống ảnh rồi gửi thủ công cho bạn bè hoặc nhóm."
-          );
-        };
-
-        // Cập nhật button "Tải xuống" để làm rõ hơn
-        shareBtn.querySelector("span").textContent = "Chia sẻ";
-        shareBtn.title = "Chia sẻ bộ sưu tập lên mạng xã hội";
-      });
-
-      closeShareModal.addEventListener("click", () => {
-        shareModal.classList.add("hidden");
-      });
-
-      // Initialize checkbox states and event listeners
-      allFramesCheckboxes.filters.addEventListener("change", (e) => {
-        isEditingAllFrames = e.target.checked;
-        allFramesCheckboxes.effects.checked = e.target.checked;
-        document.querySelectorAll(".film-frame").forEach((frame) => {
-          if (isEditingAllFrames) {
-            frame.classList.add("selected-all");
-            frame.classList.remove("active-edit-frame");
-          } else {
-            frame.classList.remove("selected-all");
-          }
-        });
-        if (isEditingAllFrames) {
-          showNotification(
-            "Đã chọn tất cả khung hình. Mọi thay đổi sẽ được áp dụng đồng bộ."
-          );
-          setActiveFrame(null);
-        } else if (galleryContainer.firstElementChild) {
-          setActiveFrame(galleryContainer.firstElementChild.id);
-        }
-      });
-
-      allFramesCheckboxes.effects.addEventListener("change", (e) => {
-        isEditingAllFrames = e.target.checked;
-        allFramesCheckboxes.filters.checked = e.target.checked;
-        document.querySelectorAll(".film-frame").forEach((frame) => {
-          if (isEditingAllFrames) {
-            frame.classList.add("selected-all");
-            frame.classList.remove("active-edit-frame");
-          } else {
-            frame.classList.remove("selected-all");
-          }
-        });
-        if (isEditingAllFrames) {
-          showNotification(
-            "Đã chọn tất cả khung hình. Mọi thay đổi sẽ được áp dụng đồng bộ."
-          );
-          setActiveFrame(null);
-        } else if (galleryContainer.firstElementChild) {
-          setActiveFrame(galleryContainer.firstElementChild.id);
-        }
-      });
-
-      // --- Chức năng Tách nền tự động bằng AI ---
-      // Thêm sự kiện click cho nút "Tách nền"
-      removeBgBtn.addEventListener("click", async () => {
-        const targetFrames = getTargetFrames();
-        if (targetFrames.length === 0) {
-          showNotification(
-            "Vui lòng chọn một khung ảnh có hình ảnh để tách nền.",
-            true
-          );
-          return;
-        }
-        if (targetFrames.length > 1) {
-          showNotification(
-            "Bạn chỉ có thể tách nền cho một khung ảnh tại một thời điểm.",
-            true
-          );
-          return;
-        }
-
-        const activeFrame = targetFrames[0];
-        const firstImage = activeFrame.querySelector("img");
-        if (!firstImage) {
-          showNotification("Khung ảnh được chọn chưa có hình ảnh.", true);
-          return;
-        }
-        if (activeFrame.classList.contains("processing")) {
-          showNotification("Ảnh đang được xử lý, vui lòng đợi.", true);
-          return;
-        }
-
-        // Hiển thị loading và vô hiệu hóa nút
-        removeBgBtn.disabled = true;
-        removeBgBtnText.textContent = "Đang xử lý...";
-        removeBgSpinner.classList.remove("hidden");
-        activeFrame.classList.add("processing");
-
-        try {
-          // Sử dụng fetch API để tải ảnh gốc
-          const response = await fetch(firstImage.src);
-          if (!response.ok) {
-            throw new Error("Lỗi khi tải ảnh gốc.");
-          }
-          const blob = await response.blob();
-
-          const formData = new FormData();
-          formData.append("image_file", blob, "image.png");
-          formData.append("size", "auto");
-
-          const removeBgResponse = await fetch(
-            "https://api.remove.bg/v1.0/removebg",
-            {
-              method: "POST",
-              headers: {
-                "X-Api-Key": REMOVE_BG_API_KEY,
-                Accept: "image/png", // Yêu cầu trả về trực tiếp ảnh
-              },
-              body: formData,
-            }
-          );
-
-          if (!removeBgResponse.ok) {
-            throw new Error(
-              `Lỗi API: ${removeBgResponse.status} ${removeBgResponse.statusText}`
-            );
-          }
-
-          const removedBgBlob = await removeBgResponse.blob();
-          const removedBgImageSrc = URL.createObjectURL(removedBgBlob);
-
-          // Lưu lại ảnh gốc và ảnh đã tách nền vào dataset của frame
-          activeFrame.dataset.originalSrc = firstImage.src;
-          activeFrame.dataset.removedBgSrc = removedBgImageSrc;
-
-          // Áp dụng ảnh đã tách nền
-          firstImage.src = removedBgImageSrc;
-
-          // Cập nhật trạng thái và hiển thị tùy chọn nền
-          backgroundOptionsDiv.classList.remove("hidden");
-          document.getElementById("removeBgBtn").classList.add("hidden");
-          showNotification("Đã tách nền ảnh thành công!");
-        } catch (error) {
-          console.error("Lỗi khi tách nền:", error);
-          showNotification(`Lỗi khi tách nền: ${error.message}`, true);
-        } finally {
-          // Khôi phục trạng thái ban đầu của nút
-          removeBgBtn.disabled = false;
-          removeBgBtnText.textContent = "Tách nền";
-          removeBgSpinner.classList.add("hidden");
-          activeFrame.classList.remove("processing");
-        }
-      });
-
-      // Thêm sự kiện lắng nghe khi người dùng chọn một nền mới
-      backgroundOptionInputs.forEach((input) => {
-        input.addEventListener("change", (e) => {
-          const backgroundValue = e.target.value;
-          const targetFrames = getTargetFrames();
-
-          if (targetFrames.length === 0) {
-            showNotification(
-              "Vui lòng chọn một khung ảnh để áp dụng nền.",
-              true
-            );
-            return;
-          }
-
-          targetFrames.forEach((frame) => {
-            updateImageWithBackground(frame, backgroundValue);
-          });
-
-          showNotification("Đã áp dụng nền mới!");
-        });
-      });
-
-      // Hàm cập nhật hình ảnh với nền mới
-      function updateImageWithBackground(frame, backgroundValue) {
-        const imgContainer = frame.querySelector(".image-container");
-        const img = imgContainer.querySelector("img");
-
-        if (!img || !frame.dataset.removedBgSrc) {
-          // Nếu ảnh chưa được tách nền hoặc không có ảnh, không làm gì cả
-          return;
-        }
-
-        if (backgroundValue === "original") {
-          // Nếu chọn "Nền gốc", khôi phục lại ảnh ban đầu
-          img.src = frame.dataset.originalSrc;
-          // Ẩn lại nút tách nền và tùy chọn nền
-          document.getElementById("removeBgBtn").classList.remove("hidden");
-          backgroundOptionsDiv.classList.add("hidden");
-        } else {
-          // Nếu chọn một nền mới, tạo canvas để kết hợp ảnh đã tách nền và nền mới
-
-          const canvas = document.createElement("canvas");
-          canvas.className = "background-canvas absolute inset-0 -z-10"; // Nền nằm ở lớp dưới
-
-          const removedBgImg = new Image();
-          removedBgImg.crossOrigin = "anonymous";
-          removedBgImg.onload = () => {
-            canvas.width = removedBgImg.width;
-            canvas.height = removedBgImg.height;
-
-            const ctx = canvas.getContext("2d");
-
-            const bgImg = new Image();
-            bgImg.crossOrigin = "anonymous";
-            bgImg.onload = () => {
-              ctx.drawImage(bgImg, 0, 0, canvas.width, canvas.height);
-              ctx.drawImage(removedBgImg, 0, 0, canvas.width, canvas.height);
-              img.src = canvas.toDataURL();
-            };
-
-            // Xử lý các tùy chọn nền màu
-            if (backgroundValue === "white-bg") {
-              bgImg.src =
-                "data:image/svg+xml;base64," +
-                btoa(
-                  '<svg xmlns="http://www.w3.org/2000/svg" width="1" height="1"><rect width="1" height="1" fill="white"/></svg>'
-                );
-            } else if (backgroundValue === "black-bg") {
-              bgImg.src =
-                "data:image/svg+xml;base64," +
-                btoa(
-                  '<svg xmlns="http://www.w3.org/2000/svg" width="1" height="1"><rect width="1" height="1" fill="black"/></svg>'
-                );
-            } else if (backgroundValue === "color-bg") {
-              // Sử dụng Canvas để tạo gradient màu
-              const tempCanvas = document.createElement("canvas");
-              const tempCtx = tempCanvas.getContext("2d");
-              tempCanvas.width = canvas.width;
-              tempCanvas.height = canvas.height;
-              const gradient = tempCtx.createLinearGradient(
-                0,
-                0,
-                tempCanvas.width,
-                tempCanvas.height
-              );
-              gradient.addColorStop(0, "#ef4444");
-              gradient.addColorStop(0.5, "#facc15");
-              gradient.addColorStop(1, "#22c55e");
-              tempCtx.fillStyle = gradient;
-              tempCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
-              bgImg.src = tempCanvas.toDataURL();
-            } else {
-              bgImg.src = backgroundValue;
-            }
-          };
-          removedBgImg.src = frame.dataset.removedBgSrc;
-        }
-      }
-
-      // Gọi hàm để tạo 4 khung mặc định khi trang web được tải
-      createDefaultPlaceholders();
-    });
-    </script>
+<script>
+      document.addEventListener("DOMContentLoaded", () => {
+        /* --- Nâng cấp Dark Mode / Light Mode Toggle Script --- */
+        const themeToggleBtn = document.getElementById("theme-toggle");
+
+        function applyTheme(theme) {
+          const isDark = theme === "dark";
+          document.body.classList.toggle("dark", isDark);
+          themeToggleBtn.classList.toggle("loading", true);
+          setTimeout(() => {
+            themeToggleBtn.classList.toggle("loading", false);
+            const newText = isDark
+              ? "Đã chuyển sang Chế độ tối."
+              : "Đã chuyển sang Chế độ sáng.";
+            showNotification(newText, false);
+          }, 400);
+        }
+
+        const currentTheme = localStorage.getItem("theme");
+        if (currentTheme) {
+          applyTheme(currentTheme);
+        }
+
+        themeToggleBtn.addEventListener("click", () => {
+          const currentMode = document.body.classList.contains("dark")
+            ? "light"
+            : "dark";
+          applyTheme(currentMode);
+          localStorage.setItem("theme", currentMode);
+        });
+
+        // --- Biến toàn cục và Element cache ---
+        let currentActiveFrameId = "frame-1";
+        const galleryContainer = document.getElementById("galleryContainer");
+        const cameraVideo = document.getElementById("cameraVideo");
+        const cameraModal = document.getElementById("cameraModal");
+        const cameraCountdown = document.getElementById("cameraCountdown");
+        const photoboothCountdown = document.getElementById(
+          "photoboothCountdown"
+        );
+        const closeCamera = document.getElementById("closeCamera");
+        let videoStream;
+        let currentFacingMode = "user";
+        let isEditingAllFrames = false;
+
+        const flashEffectDiv = document.getElementById("flash");
+        const notificationDiv = document.getElementById("notification");
+        const notificationMessageSpan = notificationDiv.querySelector("span");
+
+        const allFramesCheckboxes = {
+          filters: document.getElementById("selectAllFrames"),
+          effects: document.getElementById("selectAllEffects"),
+        };
+        const allFramesCheckboxContainers = {
+          filters: allFramesCheckboxes.filters.closest(".custom-checkbox"),
+          effects: allFramesCheckboxes.effects.closest(".custom-checkbox"),
+        };
+
+        // Biến và elements cho chức năng tách nền
+        const REMOVE_BG_API_KEY = "yCBhn44BZg4aGEC3quegGbe1"; // Thay bằng API Key của bạn
+        const removeBgBtn = document.getElementById("removeBgBtn");
+        const removeBgBtnText = document.getElementById("removeBgBtnText");
+        const removeBgSpinner = document.getElementById("removeBgSpinner");
+        const backgroundOptionsDiv =
+          document.getElementById("backgroundOptions");
+        const backgroundOptionInputs = document.querySelectorAll(
+          '#backgroundOptions input[name="bg-option"]'
+        );
+
+        let originalImageSrc = null;
+        let currentRemovedBgImageSrc = null;
+
+        // --- Helper Functions ---
+        function showNotification(
+          message = "Thao tác thành công!",
+          isError = false
+        ) {
+          notificationMessageSpan.textContent = message;
+          notificationDiv.style.backgroundColor = isError ? "#dc3545" : "#333";
+          notificationDiv.classList.add("show");
+          setTimeout(() => {
+            notificationDiv.classList.remove("show");
+          }, 3000);
+        }
+
+        function triggerFlash() {
+          flashEffectDiv.classList.add("flash-animation");
+          flashEffectDiv.addEventListener(
+            "animationend",
+            () => {
+              flashEffectDiv.classList.remove("flash-animation");
+            },
+            { once: true }
+          );
+        }
+
+        // --- Quản lý Active Frame (Khung ảnh đang chỉnh sửa) ---
+        function getTargetFrames() {
+          if (isEditingAllFrames) {
+            const frames = Array.from(
+              document.querySelectorAll(".film-frame")
+            ).filter((frame) => frame.querySelector("img"));
+            if (frames.length === 0) {
+              showNotification("Không có ảnh nào để chỉnh sửa.", true);
+            }
+            return frames;
+          } else {
+            const activeFrame = document.getElementById(currentActiveFrameId);
+            return activeFrame && activeFrame.querySelector("img")
+              ? [activeFrame]
+              : [];
+          }
+        }
+
+        function setActiveFrame(frameId) {
+          document.querySelectorAll(".film-frame").forEach((frame) => {
+            frame.classList.remove("active-edit-frame");
+            frame.classList.remove("selected-all");
+          });
+          const newActiveFrame = document.getElementById(frameId);
+          if (newActiveFrame) {
+            newActiveFrame.classList.add("active-edit-frame");
+            currentActiveFrameId = frameId;
+          } else {
+            currentActiveFrameId = null;
+          }
+        }
+
+        // Cập nhật lại khung "Nhấp để thêm ảnh" ban đầu
+        function createPlaceholderFrame(id) {
+          const newFrame = document.createElement("div");
+          newFrame.className = "film-frame";
+          newFrame.id = id;
+          newFrame.innerHTML = `
+            <div class="film-strip">
+                <div class="film-hole"></div><div class="film-hole"></div><div class="film-hole"></div><div class="film-hole"></div>
+            </div>
+            <div class="image-placeholder">
+                <svg class="w-16 h-16 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                </svg>
+                <span class="image-placeholder-text">Nhấp để thêm ảnh</span>
+            </div>
+            <div class="film-strip">
+                <div class="film-hole"></div><div class="film-hole"></div><div class="film-hole"></div><div class="film-hole"></div>
+            </div>
+        `;
+          const placeholder = newFrame.querySelector(".image-placeholder");
+          setupPlaceholder(placeholder);
+          setupImageActions(newFrame);
+          return newFrame;
+        }
+
+        // Tạo 4 khung ảnh placeholder mặc định
+        function createDefaultPlaceholders() {
+          galleryContainer.innerHTML = "";
+          for (let i = 0; i < 4; i++) {
+            const frameId = `frame-${i}`;
+            galleryContainer.appendChild(createPlaceholderFrame(frameId));
+          }
+          // Đặt khung thứ 2 làm khung active mặc định như trong code ban đầu
+          setActiveFrame("frame-1");
+        }
+
+        // --- Chức năng tải ảnh cho Placeholder ---
+        function setupPlaceholder(placeholder) {
+          placeholder.addEventListener("click", (event) => {
+            const input = document.createElement("input");
+            input.type = "file";
+            input.accept = "image/*";
+            input.onchange = (e) => {
+              const file = e.target.files[0];
+              if (file) {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                  const parentFrame = placeholder.closest(".film-frame");
+                  if (parentFrame) {
+                    const imageContainer = document.createElement("div");
+                    imageContainer.className = "image-container";
+                    imageContainer.innerHTML = `
+                                <img src="${
+                                  event.target.result
+                                }" alt="User image" class="edited-image">
+                                <div class="film-date">${new Date()
+                                  .toISOString()
+                                  .slice(0, 10)}</div>
+                                <div class="film-brand">FUJIFILM</div>
+                                <div class="image-actions">
+                                    <button class="action-btn edit-btn" title="Chỉnh sửa">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path>
+                                        </svg>
+                                    </button>
+                                    <button class="action-btn delete-btn" title="Xóa">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                        </svg>
+                                    </button>
+                                </div>
+                            `;
+                    placeholder.replaceWith(imageContainer);
+                    setupImageActions(imageContainer.closest(".film-frame"));
+                    showNotification("Đã tải ảnh lên thành công!");
+                    setActiveFrame(parentFrame.id);
+                  }
+                };
+                reader.readAsDataURL(file);
+              }
+            };
+            input.click();
+          });
+        }
+
+        // --- Xử lý sự kiện cho các nút hành động trên ảnh ---
+        function setupImageActions(frame) {
+          const deleteBtn = frame.querySelector(".delete-btn");
+          if (deleteBtn) {
+            deleteBtn.addEventListener("click", handleDeleteButtonClick);
+          }
+          const editBtn = frame.querySelector(".edit-btn");
+          if (editBtn) {
+            editBtn.addEventListener("click", (e) => {
+              e.stopPropagation();
+              setActiveFrame(frame.id);
+              showNotification(`Đang chỉnh sửa khung: ${frame.id}`);
+            });
+          }
+          frame.addEventListener("click", (e) => {
+            if (!isEditingAllFrames) {
+              setActiveFrame(frame.id);
+            }
+          });
+        }
+
+        document
+          .querySelectorAll(".image-placeholder")
+          .forEach(setupPlaceholder);
+        document.querySelectorAll(".film-frame").forEach(setupImageActions);
+
+        // --- Chức năng Xóa Khung Ảnh ---
+        function handleDeleteButtonClick(event) {
+          event.stopPropagation();
+          if (confirm("Bạn có chắc chắn muốn xóa khung ảnh này không?")) {
+            const frameToRemove = event.currentTarget.closest(".film-frame");
+            if (frameToRemove) {
+              const nextFrame =
+                frameToRemove.nextElementSibling ||
+                galleryContainer.firstElementChild;
+              frameToRemove.remove();
+              showNotification("Đã xóa khung ảnh!");
+              if (frameToRemove.id === currentActiveFrameId) {
+                currentActiveFrameId = null;
+                if (nextFrame) {
+                  setActiveFrame(nextFrame.id);
+                }
+              }
+            }
+          }
+        }
+
+        // --- Chức năng Thêm Khung Mới ---
+        document.getElementById("addFrameBtn").addEventListener("click", () => {
+          const newFrameId = `frame-${Date.now()}`;
+          const newFrameHTML = `
+            <div class="film-frame" id="${newFrameId}">
+                <div class="film-strip">
+                    <div class="film-hole"></div><div class="film-hole"></div><div class="film-hole"></div><div class="film-hole"></div>
+                </div>
+                <div class="image-placeholder">
+                    <svg class="w-16 h-16 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                    </svg>
+                    <span class="image-placeholder-text">Nhấp để thêm ảnh</span>
+                </div>
+                <div class="film-strip">
+                    <div class="film-hole"></div><div class="film-hole"></div><div class="film-hole"></div><div class="film-hole"></div>
+                </div>
+            </div>
+        `;
+          galleryContainer.insertAdjacentHTML("beforeend", newFrameHTML);
+          showNotification("Đã thêm khung ảnh mới!");
+          const newFrame = document.getElementById(newFrameId);
+          setupPlaceholder(newFrame.querySelector(".image-placeholder"));
+          setupImageActions(newFrame);
+          setActiveFrame(newFrameId);
+        });
+
+        // --- Chức năng Xóa Tất Cả Khung Ảnh và tạo lại 4 khung mặc định ---
+        document.getElementById("clearAllBtn").addEventListener("click", () => {
+          if (
+            confirm("Bạn có chắc chắn muốn xóa tất cả các khung ảnh không?")
+          ) {
+            clearAllAndAddPlaceholders();
+            showNotification(
+              "Đã xóa tất cả khung ảnh và tạo lại 4 khung mặc định!"
+            );
+          }
+        });
+
+        function clearAllAndAddPlaceholders() {
+          // Xóa tất cả khung hiện tại
+          galleryContainer.innerHTML = "";
+          // Thêm 4 khung mặc định vào lại
+          createDefaultPlaceholders();
+          currentActiveFrameId = null;
+        }
+
+        // --- Chức năng Chuyển đổi Bố cục ---
+        document
+          .getElementById("layoutSelector")
+          .addEventListener("change", function () {
+            const layout = this.value;
+            galleryContainer.classList.remove(
+              "grid",
+              "grid-cols-2",
+              "gap-6",
+              "flex",
+              "flex-col",
+              "flex-row",
+              "overflow-x-auto",
+              "pb-4",
+              "collage-layout",
+              "filmstrip-container"
+            );
+            galleryContainer.style.height = "";
+
+            document.querySelectorAll(".film-frame").forEach((frame) => {
+              frame.classList.remove("polaroid");
+              frame.style.width = "";
+              frame.style.gridColumn = "";
+              frame.style.gridRow = "";
+            });
+
+            switch (layout) {
+              case "grid":
+                galleryContainer.classList.add("grid", "grid-cols-2", "gap-6");
+                break;
+              case "vertical":
+                galleryContainer.classList.add("flex", "flex-col", "gap-6");
+                break;
+              case "horizontal":
+                galleryContainer.classList.add(
+                  "flex",
+                  "flex-row",
+                  "gap-6",
+                  "overflow-x-auto",
+                  "pb-4",
+                  "filmstrip-container"
+                );
+                break;
+              case "collage":
+                galleryContainer.classList.add("collage-layout");
+                galleryContainer.style.height = "600px";
+                break;
+              case "filmstrip":
+                galleryContainer.classList.add("filmstrip-container");
+                document
+                  .querySelectorAll(".film-frame")
+                  .forEach((frame) => frame.classList.add("filmstrip-layout"));
+                break;
+              case "polaroid":
+                galleryContainer.classList.add("grid", "grid-cols-2", "gap-6");
+                document
+                  .querySelectorAll(".film-frame")
+                  .forEach((frame) => frame.classList.add("polaroid"));
+                break;
+            }
+            showNotification(`Đã đổi bố cục sang ${layout}!`);
+          });
+
+        // --- Chức năng Áp dụng Bộ lọc (Filters) ---
+        const filters = {
+          none: "",
+          provia: "contrast(1.15) brightness(1) saturate(1.1)",
+          velvia: "contrast(1.3) brightness(1) saturate(1.5)",
+          astia: "contrast(1) brightness(1.05) saturate(0.9)",
+          "classic-chrome":
+            "contrast(1.1) brightness(0.95) saturate(0.75) sepia(0.1)",
+          acros: "contrast(1.2) brightness(1) saturate(0) sepia(0.05)",
+          monochrome: "grayscale(1) contrast(1.2)",
+          sepia: "sepia(0.8) contrast(1.1)",
+          "pro-neg-hi": "contrast(1.1) brightness(1) saturate(0.9)",
+          "pro-neg-std": "contrast(1) brightness(1) saturate(0.8)",
+          eterna: "contrast(0.9) brightness(1.05) saturate(0.85)",
+          classic: "contrast(1.1) brightness(1.1) saturate(1.3) sepia(0.2)",
+        };
+
+        document
+          .querySelectorAll("#filtersTab .filter-option")
+          .forEach((filterOption) => {
+            filterOption.addEventListener("click", () => {
+              const targetFrames = getTargetFrames();
+              if (targetFrames.length === 0) {
+                showNotification(
+                  "Vui lòng chọn một khung ảnh hoặc tất cả khung hình để áp dụng bộ lọc.",
+                  true
+                );
+                return;
+              }
+
+              document
+                .querySelectorAll("#filtersTab .filter-option")
+                .forEach((opt) => opt.classList.remove("active"));
+              filterOption.classList.add("active");
+
+              const filterValue = filterOption.dataset.filter;
+              targetFrames.forEach((frame) => {
+                const img = frame.querySelector(".image-container img");
+                if (img) {
+                  img.style.filter = filters[filterValue];
+                }
+              });
+
+              showNotification(
+                `Đã áp dụng bộ lọc ${filterValue} cho ${
+                  isEditingAllFrames ? "tất cả" : "khung hình đang chọn"
+                }!`
+              );
+            });
+          });
+
+        // --- Chức năng Điều chỉnh Hiệu ứng (Effects) ---
+        const grainSlider = document.getElementById("grainSlider");
+        const grainValueSpan = document.getElementById("grainValue");
+        const grainProgressBar = document.getElementById("grainProgress");
+
+        const leakSlider = document.getElementById("leakSlider");
+        const leakValueSpan = document.getElementById("leakValue");
+        const leakProgressBar = document.getElementById("leakProgress");
+
+        const vignetteSlider = document.getElementById("vignetteSlider");
+        const vignetteValueSpan = document.getElementById("vignetteValue");
+        const vignetteProgressBar = document.getElementById("vignetteProgress");
+
+        function applyCombinedEffects() {
+          const targetFrames = getTargetFrames();
+          if (targetFrames.length === 0) return;
+
+          const grain = parseFloat(grainSlider.value);
+          const leak = parseFloat(leakSlider.value);
+          const vignette = parseFloat(vignetteSlider.value);
+
+          targetFrames.forEach((frame) => {
+            const imgContainer = frame.querySelector(".image-container");
+            const img = imgContainer ? imgContainer.querySelector("img") : null;
+            if (!img) return;
+
+            [".grain-overlay", ".leak-overlay", ".vignette-overlay"].forEach(
+              (sel) => {
+                const overlay = imgContainer.querySelector(sel);
+                if (overlay) overlay.remove();
+              }
+            );
+
+            if (grain > 0) {
+              const grainOverlay = document.createElement("div");
+              grainOverlay.className = "effect-overlay grain-overlay";
+              grainOverlay.style.background = `url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/38AAwAB/9oB7QAAAABJRU5ErkJggg==) repeat`;
+              grainOverlay.style.backgroundSize = "2px 2px";
+              grainOverlay.style.opacity = (grain / 100) * 0.4;
+              imgContainer.appendChild(grainOverlay);
+            }
+
+            if (leak > 0) {
+              const leakOverlay = document.createElement("div");
+              leakOverlay.className = "effect-overlay leak-overlay";
+              leakOverlay.style.background = `radial-gradient(ellipse at 80% 20%, rgba(255,165,0,0.5) 0%, transparent 70%)`;
+              leakOverlay.style.opacity = leak / 100;
+              imgContainer.appendChild(leakOverlay);
+            }
+
+            if (vignette > 0) {
+              const vignetteOverlay = document.createElement("div");
+              vignetteOverlay.className = "effect-overlay vignette-overlay";
+              vignetteOverlay.style.boxShadow = `inset 0 0 ${
+                vignette * 0.5
+              }px ${vignette * 0.2}px rgba(0,0,0,0.8)`;
+              imgContainer.appendChild(vignetteOverlay);
+            }
+          });
+          showNotification(
+            `Đã điều chỉnh hiệu ứng cho ${
+              isEditingAllFrames ? "tất cả" : "khung hình đang chọn"
+            }!`
+          );
+        }
+
+        grainSlider.addEventListener("input", function () {
+          grainValueSpan.textContent = this.value + "%";
+          grainProgressBar.style.width = this.value + "%";
+          applyCombinedEffects();
+        });
+
+        leakSlider.addEventListener("input", function () {
+          leakValueSpan.textContent = this.value + "%";
+          leakProgressBar.style.width = this.value + "%";
+          applyCombinedEffects();
+        });
+
+        vignetteSlider.addEventListener("input", function () {
+          vignetteValueSpan.textContent = this.value + "%";
+          vignetteProgressBar.style.width = this.value + "%";
+          applyCombinedEffects();
+        });
+
+        // --- Chức năng Tùy chỉnh Kiểu khung ---
+        document.querySelectorAll(".frame-type-btn").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            document
+              .querySelectorAll(".frame-type-btn")
+              .forEach((b) => b.classList.remove("active"));
+            btn.classList.add("active");
+            const frameType = btn.dataset.frame;
+            document.querySelectorAll(".film-frame").forEach((frame) => {
+              frame.classList.remove("polaroid");
+              frame.style.padding = "";
+              frame.style.backgroundColor = "";
+
+              const filmStripTop = frame.querySelector(
+                ".film-strip:first-of-type"
+              );
+              const filmStripBottom = frame.querySelector(
+                ".film-strip:last-of-type"
+              );
+              const imageContainer = frame.querySelector(".image-container");
+
+              if (filmStripTop) filmStripTop.style.display = "none";
+              if (filmStripBottom) filmStripBottom.style.display = "none";
+              if (imageContainer) imageContainer.style.borderRadius = "4px";
+
+              if (frameType === "film") {
+                if (filmStripTop) filmStripTop.style.display = "flex";
+                if (filmStripBottom) filmStripBottom.style.display = "flex";
+                if (imageContainer) imageContainer.style.borderRadius = "0";
+              } else if (frameType === "polaroid") {
+                frame.classList.add("polaroid");
+                frame.style.paddingBottom = "40px";
+                frame.style.backgroundColor = "white";
+              } else if (frameType === "border") {
+                frame.style.padding = "20px";
+                frame.style.backgroundColor = "white";
+              } else if (frameType === "none") {
+                frame.style.padding = "0";
+                frame.style.backgroundColor = "white";
+              }
+              updateFilmDetailsVisibility();
+            });
+            showNotification(`Đã đổi kiểu khung thành ${frameType}!`);
+          });
+        });
+
+        // --- Chức năng Tùy chỉnh Màu khung ---
+        document.querySelectorAll(".frame-color-btn").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            document
+              .querySelectorAll(".frame-color-btn")
+              .forEach((b) => b.classList.remove("active"));
+            btn.classList.add("active");
+            const color = btn.dataset.color;
+            document.querySelectorAll(".film-frame").forEach((frame) => {
+              frame.style.backgroundColor = "";
+              if (color === "white") {
+                frame.style.backgroundColor = "white";
+              } else if (color === "black") {
+                frame.style.backgroundColor = "black";
+              } else if (color === "gold") {
+                frame.style.backgroundColor = "gold";
+              } else if (color === "vintage") {
+                frame.style.backgroundColor = "#F5E3D1";
+              }
+            });
+            showNotification(`Đã đổi màu khung thành ${color}!`);
+          });
+        });
+
+        // --- Chức năng Chú thích (Text) ---
+        const captionTextarea = document.getElementById("captionText");
+        const fontSelector = document.getElementById("fontSelector");
+        const textColorBtns = document.querySelectorAll(".text-color-btn");
+        const textPositionBtns =
+          document.querySelectorAll(".text-position-btn");
+        const textSizeBtns = document.querySelectorAll(".text-size-btn");
+        const applyTextBtn = document.getElementById("applyTextBtn");
+        const textPreviewSpan = document
+          .getElementById("textPreview")
+          .querySelector("span");
+
+        let currentTextSettings = {
+          text: "Tandev.foto Studio",
+          font: "'Courier Prime', monospace",
+          color: "white",
+          position: "bottom",
+          size: "medium",
+        };
+
+        function updateTextPreview() {
+          textPreviewSpan.textContent =
+            captionTextarea.value || "Tandev.foto Studio";
+          textPreviewSpan.style.fontFamily = fontSelector.value;
+          textPreviewSpan.style.color = document.querySelector(
+            ".text-color-btn.active"
+          ).dataset.color;
+          let fontSize;
+          switch (
+            document.querySelector(".text-size-btn.active").dataset.size
+          ) {
+            case "small":
+              fontSize = "12px";
+              break;
+            case "medium":
+              fontSize = "16px";
+              break;
+            case "large":
+              fontSize = "20px";
+              break;
+            default:
+              fontSize = "16px";
+          }
+          textPreviewSpan.style.fontSize = fontSize;
+        }
+
+        captionTextarea.addEventListener("input", () => {
+          currentTextSettings.text = captionTextarea.value;
+          updateTextPreview();
+        });
+        fontSelector.addEventListener("change", () => {
+          currentTextSettings.font = fontSelector.value;
+          updateTextPreview();
+        });
+        textColorBtns.forEach((btn) => {
+          btn.addEventListener("click", () => {
+            textColorBtns.forEach((b) => b.classList.remove("active"));
+            btn.classList.add("active");
+            currentTextSettings.color = btn.dataset.color;
+            updateTextPreview();
+          });
+        });
+        textSizeBtns.forEach((btn) => {
+          btn.addEventListener("click", () => {
+            textSizeBtns.forEach((b) => b.classList.remove("active"));
+            btn.classList.add("active");
+            currentTextSettings.size = btn.dataset.size;
+            updateTextPreview();
+          });
+        });
+        textPositionBtns.forEach((btn) => {
+          btn.addEventListener("click", () => {
+            textPositionBtns.forEach((b) => b.classList.remove("active"));
+            btn.classList.add("active");
+            currentTextSettings.position = btn.dataset.position;
+          });
+        });
+
+        applyTextBtn.addEventListener("click", () => {
+          const targetFrames = getTargetFrames();
+          if (targetFrames.length === 0) {
+            showNotification(
+              "Vui lòng chọn một khung ảnh hoặc tất cả khung hình để thêm chú thích.",
+              true
+            );
+            return;
+          }
+
+          targetFrames.forEach((activeFrame) => {
+            const imageContainer = activeFrame
+              ? activeFrame.querySelector(".image-container")
+              : null;
+            if (imageContainer) {
+              let captionElement =
+                imageContainer.querySelector(".image-caption");
+              if (!captionElement) {
+                captionElement = document.createElement("div");
+                captionElement.className =
+                  "image-caption absolute text-center w-full p-2 pointer-events-none";
+                imageContainer.appendChild(captionElement);
+              }
+              captionElement.textContent = currentTextSettings.text;
+              captionElement.style.fontFamily = currentTextSettings.font;
+              captionElement.style.color = currentTextSettings.color;
+              let fontSize;
+              switch (currentTextSettings.size) {
+                case "small":
+                  fontSize = "12px";
+                  break;
+                case "medium":
+                  fontSize = "16px";
+                  break;
+                case "large":
+                  fontSize = "20px";
+                  break;
+              }
+              captionElement.style.fontSize = fontSize;
+
+              captionElement.style.top = "";
+              captionElement.style.bottom = "";
+              captionElement.style.left = "";
+              captionElement.style.right = "";
+              captionElement.style.transform = "";
+
+              switch (currentTextSettings.position) {
+                case "top":
+                  captionElement.style.top = "10px";
+                  break;
+                case "middle":
+                  captionElement.style.top = "50%";
+                  captionElement.style.transform = "translateY(-50%)";
+                  break;
+                case "bottom":
+                  captionElement.style.bottom = "10px";
+                  break;
+              }
+            }
+          });
+          showNotification(
+            `Đã áp dụng chú thích cho ${
+              isEditingAllFrames ? "tất cả" : "khung hình đang chọn"
+            }!`
+          );
+        });
+
+        // --- Chức năng Thêm và Quản lý Sticker ---
+        const stickerData = {
+          heart: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#ff4d6d"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>`,
+          star: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#ffd700"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>`,
+          smile: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#ffcc00"><circle cx="12" cy="12" r="10" fill="#ffcc00"/><path d="M8 14s1.5 2 4 2 4-2 4-2" stroke="#000" stroke-width="1" fill="none"/><circle cx="9" cy="9" r="1.5" fill="#000"/><circle cx="15" cy="9" r="1.5" fill="#000"/></svg>`,
+          camera: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#333"><path d="M9 3L7.17 5H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2h-3.17L15 3H9zm3 15c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z"/><circle cx="12" cy="13" r="3"/></svg>`,
+          location: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#ff4d4d"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>`,
+          like: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#3b82f6"><path d="M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-1.91l-.01-.01L23 10z"/></svg>`,
+          fire: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#ff7700"><path d="M13.5.67s.74 2.65.74 4.8c0 2.06-1.35 3.73-3.41 3.73-2.07 0-3.63-1.67-3.63-3.73l.03-.36C5.21 7.51 4 10.62 4 14c0 4.42 3.58 8 8 8s8-3.58 8-8C20 8.61 17.41 3.8 13.5.67zM11.71 19c-1.78 0-3.22-1.4-3.22-3.14 0-1.62 1.05-2.76 2.81-3.12 1.77-.36 3.6-1.21 4.62-2.58.39 1.29.59 2.65.59 4.04 0 2.65-2.15 4.8-4.8 4.8z"/></svg>`,
+          music: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#9333ea"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>`,
+          sun: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#fbbf24"><path d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.79 1.42-1.41zM4 10.5H1v2h3v-2zm9-9.95h-2V3.5h2V.55zm7.45 3.91l-1.41-1.41-1.79 1.79 1.41 1.41 1.79-1.79zm-3.21 13.7l1.79 1.8 1.41-1.41-1.8-1.79-1.4 1.4zM20 10.5v2h3v-2h-3zm-8-5c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm-1 16.95h2V19.5h-2v2.95zm-7.45-3.91l1.41 1.41 1.79-1.8-1.41-1.41-1.79 1.8z"/></svg>`,
+          sparkles: `<svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="#a855f7"><path d="M11 2a1 1 0 0 1 2 0v5h5a1 1 0 0 1 0 2h-5v5a1 1 0 0 1-2 0v-5H4a1 1 0 0 1 0-2h5V2zm10 13a1 1 0 0 1-2 0v-2a1 1 0 0 1 2 0v2zm-2-6a1 1 0 0 1 0 2h-2a1 1 0 0 1 0-2h2zm-2 6a1 1 0 0 1 0 2h-2a1 1 0 0 1 0-2h2zm-4 4a1 1 0 0 1 0 2h-2a1 1 0 0 1 0-2h2zm-4-4a1 1 0 0 1 0 2H9a1 1 0 0 1 0-2h2zm-2-4a1 1 0 0 1 0 2H7a1 1 0 0 1 0-2h2zM3 13a1 1 0 0 1 2 0v2a1 1 0 0 1-2 0v-2zM3 9a1 1 0 0 1 2 0v2a1 1 0 0 1-2 0V9zM7 5a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2h2z"></path></svg>`,
+          "cloud-lightning": `<svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="#60a5fa"><path d="M19.34 8c-1.55-3.32-5.18-5.32-8.5-4.5-3.23.8-5.46 4.14-4.5 7.42-.51 1.09-.84 2.3-.92 3.58-.09 1.1.28 2.2.97 3.03.68.83 1.63 1.3 2.62 1.34h9.11c2.14.28 3.99-1.39 4.27-3.53.28-2.14-1.39-3.99-3.53-4.27zM11 12l-4 7h6l-3-6h3l-3-5z"></path></svg>`,
+          coffee: `<svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="#9333ea"><path d="M18.5 12a2.5 2.5 0 0 0 0-5H18V4H6v3h.5a2.5 2.5 0 0 0 0 5H6v9h12v-9h.5zM16 19H8v-7h8v7zm-.5-5a.5.5 0 0 1-.5-.5.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5.5.5 0 0 1-.5.5h-2z"></path></svg>`,
+          peace: `<svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="#a78bfa"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zM12 5l-7 7.01h14L12 5zm-7 8l-3 3.01H22l-3-3.01H5z"></path></svg>`,
+          ghost: `<svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="#e2e8f0"><path d="M12 2C6.48 2 2 6.48 2 12c0 3.86 2.05 7.23 5.12 9.07l.88-1.53c-2.31-1.32-3.9-3.96-3.9-6.54 0-4.41 3.59-8 8-8s8 3.59 8 8c0 2.58-1.59 5.22-3.9 6.54l.88 1.53C20.95 19.23 23 15.86 23 12c0-5.52-4.48-10-10-10zm-4 8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm8 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"></path></svg>`,
+          cool: `<svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="#0ea5e9"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14c-1.92 0-3.64-1.11-4.47-2.71l-.1-.2-.1-.21c-.81-1.61-.83-3.52-.06-5.11l.24-.5.17-.3c.75-1.37 2.06-2.28 3.51-2.28h.01c.2 0 .4.02.59.07l.1.02.21.05c1.61.35 2.87 1.8 2.87 3.5H12c0 1.93-1.57 3.5-3.5 3.5zm7-4h-2c-1.1 0-2 .9-2 2s.9 2 2 2h2v1H8v-1c-1.66 0-3-1.34-3-3s1.34-3 3-3h7c1.66 0 3 1.34 3 3s-1.34 3-3 3z"></path></svg>`,
+          "cat-hat": `https://i.imgur.com/uT25c0x.png`,
+          "cat-heart": `https://i.imgur.com/X4yK67s.png`,
+          "cat-blush": `https://i.imgur.com/iR37yYt.png`,
+          "cat-glasses": `https://i.imgur.com/vHq9q2d.png`,
+          "cat-cute": `https://i.imgur.com/cE5aG1m.png`,
+        };
+
+        document.querySelectorAll(".sticker-item").forEach((stickerItem) => {
+          stickerItem.addEventListener("click", () => {
+            if (!currentActiveFrameId) {
+              showNotification(
+                "Vui lòng chọn một khung ảnh để thêm sticker.",
+                true
+              );
+              return;
+            }
+            const activeFrame = document.getElementById(currentActiveFrameId);
+            const imageContainer = activeFrame
+              ? activeFrame.querySelector(".image-container")
+              : null;
+            if (imageContainer && imageContainer.querySelector("img")) {
+              const stickerType = stickerItem.dataset.sticker;
+              const newSticker = document.createElement("div");
+              newSticker.className = "sticker";
+
+              let stickerContent;
+              if (stickerData[stickerType].startsWith("<svg")) {
+                stickerContent = stickerData[stickerType];
+              } else {
+                stickerContent = `<img src="${stickerData[stickerType]}" alt="${stickerType}" class="w-16 h-16 object-contain">`;
+              }
+
+              newSticker.innerHTML =
+                stickerContent +
+                `
+                    <div class="sticker-handle">
+                        <svg class="w-3 h-3 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-5v4m0 0h-4m4 0l-5-5M4 16v4m0 0h4m-4 0l5-5m11 5v-4m0 0h-4m4 0l-5 5"></path>
+                        </svg>
+                    </div>
+                    <button class="sticker-remove">X</button>
+                `;
+
+              newSticker.style.width = "64px";
+              newSticker.style.height = "64px";
+              newSticker.style.left = "calc(50% - 32px)";
+              newSticker.style.top = "calc(50% - 32px)";
+              imageContainer.appendChild(newSticker);
+              showNotification(`Đã thêm sticker ${stickerType}!`);
+
+              setupStickerInteractions(newSticker, imageContainer);
+            } else {
+              showNotification(
+                "Vui lòng chọn một khung ảnh CÓ ẢNH để thêm sticker.",
+                true
+              );
+            }
+          });
+        });
+
+        function setupStickerInteractions(sticker, container) {
+          let isDragging = false;
+          let isResizing = false;
+          let offsetX, offsetY;
+          let initialWidth, initialHeight;
+          let initialX, initialY;
+
+          const handle = sticker.querySelector(".sticker-handle");
+          const removeBtn = sticker.querySelector(".sticker-remove");
+
+          const startInteraction = (e) => {
+            const event = e.touches ? e.touches[0] : e;
+            const rect = sticker.getBoundingClientRect();
+            if (e.target === handle || e.target.closest(".sticker-handle")) {
+              isResizing = true;
+              initialWidth = rect.width;
+              initialHeight = rect.height;
+              initialX = event.clientX;
+              initialY = event.clientY;
+            } else if (
+              e.target !== removeBtn &&
+              e.target.closest(".sticker") === sticker
+            ) {
+              isDragging = true;
+              offsetX = event.clientX - rect.left;
+              offsetY = event.clientY - rect.top;
+              sticker.style.cursor = "grabbing";
+            }
+            sticker.style.transition = "none";
+            e.preventDefault();
+          };
+
+          const moveInteraction = (e) => {
+            const event = e.touches ? e.touches[0] : e;
+            if (isDragging) {
+              const containerRect = container.getBoundingClientRect();
+              let newLeft = event.clientX - containerRect.left - offsetX;
+              let newTop = event.clientY - containerRect.top - offsetY;
+
+              newLeft = Math.max(
+                0,
+                Math.min(newLeft, containerRect.width - sticker.offsetWidth)
+              );
+              newTop = Math.max(
+                0,
+                Math.min(newTop, containerRect.height - sticker.offsetHeight)
+              );
+
+              sticker.style.left = `${newLeft}px`;
+              sticker.style.top = `${newTop}px`;
+            } else if (isResizing) {
+              const deltaX = event.clientX - initialX;
+              const deltaY = event.clientY - initialY;
+              const newSize = Math.max(
+                30,
+                Math.min(initialWidth + deltaX, initialHeight + deltaY)
+              );
+              sticker.style.width = `${newSize}px`;
+              sticker.style.height = `${newSize}px`;
+            }
+          };
+
+          const endInteraction = () => {
+            isDragging = false;
+            isResizing = false;
+            sticker.style.cursor = "grab";
+            sticker.style.transition = "transform 0.2s";
+          };
+
+          sticker.addEventListener("mousedown", startInteraction);
+          sticker.addEventListener("touchstart", startInteraction);
+          document.addEventListener("mousemove", moveInteraction);
+          document.addEventListener("touchmove", moveInteraction);
+          document.addEventListener("mouseup", endInteraction);
+          document.addEventListener("touchend", endInteraction);
+          removeBtn.addEventListener("click", (e) => {
+            e.stopPropagation();
+            sticker.remove();
+            showNotification("Đã xóa sticker!");
+          });
+        }
+
+        // --- Chức năng Chụp ảnh từ webcam ---
+        document
+          .getElementById("captureBtn")
+          .addEventListener("click", async () => {
+            cameraModal.classList.remove("hidden");
+            try {
+              const stream = await navigator.mediaDevices.getUserMedia({
+                video: { facingMode: currentFacingMode },
+              });
+              cameraVideo.srcObject = stream;
+              cameraVideo.play(); // SỬA LỖI: Thêm dòng này để đảm bảo video phát
+              videoStream = stream;
+            } catch (err) {
+              console.error("Lỗi truy cập camera: ", err);
+              showNotification(
+                "Không thể truy cập camera. Vui lòng kiểm tra quyền truy cập.",
+                true
+              );
+            }
+          });
+
+        document.getElementById("closeCamera").addEventListener("click", () => {
+          cameraModal.classList.add("hidden");
+          if (videoStream) {
+            videoStream.getTracks().forEach((track) => track.stop());
+          }
+        });
+
+        document
+          .getElementById("switchCameraBtn")
+          .addEventListener("click", async () => {
+            if (videoStream) {
+              videoStream.getTracks().forEach((track) => track.stop());
+            }
+            currentFacingMode =
+              currentFacingMode === "user" ? "environment" : "user";
+            try {
+              const stream = await navigator.mediaDevices.getUserMedia({
+                video: { facingMode: currentFacingMode },
+              });
+              cameraVideo.srcObject = stream;
+              cameraVideo.play(); // SỬA LỖI: Thêm dòng này
+              videoStream = stream;
+              showNotification(
+                `Đã chuyển sang camera ${
+                    currentFacingMode === "user" ? "trước" : "sau"
+                }`
+              );
+            } catch (err) {
+              console.error("Lỗi khi chuyển camera: ", err);
+              showNotification("Không thể chuyển đổi camera.", true);
+            }
+          });
+
+        // Chức năng chụp 1 ảnh
+        document
+          .getElementById("takePhotoBtn")
+          .addEventListener("click", () => {
+            if (!videoStream) {
+              showNotification("Vui lòng mở camera trước.", true);
+              return;
+            }
+            takeSinglePhoto();
+          });
+
+        // Chức năng chụp Photobooth
+        document
+          .getElementById("takePhotoboothBtn")
+          .addEventListener("click", () => {
+            if (!videoStream) {
+              showNotification("Vui lòng mở camera trước.", true);
+              return;
+            }
+            takePhotoboothSeries();
+          });
+
+        function takeSinglePhoto() {
+          triggerFlash();
+
+          const countdown = 3;
+          cameraCountdown.textContent = countdown;
+          cameraCountdown.classList.remove("hidden");
+          let count = countdown;
+
+          const interval = setInterval(() => {
+            count--;
+            if (count > 0) {
+              cameraCountdown.textContent = count;
+            } else {
+              clearInterval(interval);
+              cameraCountdown.classList.add("hidden");
+              const imageDataUrl = captureFrame();
+              processPhoto(imageDataUrl);
+            }
+          }, 1000);
+        }
+        // Cập nhật logic cho chức năng chụp Photobooth
+        function takePhotoboothSeries() {
+          // Xóa các khung ảnh hiện tại và tạo 4 khung ảnh trống mới
+          galleryContainer.innerHTML = "";
+          for (let i = 0; i < 4; i++) {
+            const newFrame = createPlaceholderFrame(`frame-photobooth-${i}`);
+            galleryContainer.appendChild(newFrame);
+          }
+
+          photoboothCountdown.classList.remove("hidden");
+          let photoCount = 0;
+          const totalPhotos = 4;
+          const countdownInterval = 3000;
+
+          const timer = setInterval(() => {
+            if (photoCount < totalPhotos) {
+              photoboothCountdown.textContent = totalPhotos - photoCount;
+              if (photoboothCountdown.textContent === "3") {
+                showNotification(`Bắt đầu chụp photobooth!`);
+              }
+              setTimeout(() => {
+                triggerFlash();
+                const imageDataUrl = captureFrame();
+                const targetFrameId = `frame-photobooth-${photoCount}`;
+                processPhoto(imageDataUrl, targetFrameId);
+                photoCount++;
+              }, 500); // Khoảng thời gian giữa đếm ngược và chụp
+            } else {
+              clearInterval(timer);
+              photoboothCountdown.classList.add("hidden");
+              showNotification("Hoàn thành chụp photobooth!", false);
+              closeCamera.click();
+            }
+          }, countdownInterval);
+        }
+
+        function captureFrame() {
+          const canvas = document.createElement("canvas");
+          canvas.width = cameraVideo.videoWidth;
+          canvas.height = cameraVideo.videoHeight;
+          const context = canvas.getContext("2d");
+          context.drawImage(cameraVideo, 0, 0, canvas.width, canvas.height);
+          return canvas.toDataURL("image/png");
+        }
+
+        // Cập nhật logic processPhoto để có thể chỉ định khung ảnh đích
+        function processPhoto(imageDataUrl, frameId = null) {
+          let targetFrame = frameId
+            ? document.getElementById(frameId)
+            : document.getElementById(currentActiveFrameId);
+          let placeholder = targetFrame
+            ? targetFrame.querySelector(".image-placeholder")
+            : null;
+
+          if (!targetFrame || !placeholder) {
+            document.getElementById("addFrameBtn").click();
+            targetFrame = galleryContainer.lastElementChild;
+            placeholder = targetFrame.querySelector(".image-placeholder");
+          }
+
+          if (placeholder) {
+            const imageContainer = document.createElement("div");
+            imageContainer.className = "image-container";
+            imageContainer.innerHTML = `
+                <img src="${imageDataUrl}" alt="Ảnh chụp" class="edited-image">
+                <div class="film-date">${new Date()
+                  .toISOString()
+                  .slice(0, 10)}</div>
+                <div class="film-brand">FUJIFILM</div>
+                <div class="image-actions">
+                    <button class="action-btn edit-btn" title="Chỉnh sửa">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path>
+                        </svg>
+                    </button>
+                    <button class="action-btn delete-btn" title="Xóa">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                        </svg>
+                    </button>
+                </div>
+            `;
+            placeholder.replaceWith(imageContainer);
+            setupImageActions(imageContainer.closest(".film-frame"));
+            setActiveFrame(targetFrame.id);
+            showNotification("Đã chụp ảnh thành công!");
+            updateFilmDetailsVisibility();
+          }
+        }
+
+        // --- Chức năng Tải xuống (Download) ---
+        document.getElementById("downloadBtn").addEventListener("click", () => {
+          const targetElement = document.getElementById("galleryContainer");
+          if (!targetElement.children.length) {
+            showNotification("Không có ảnh nào để tải xuống.", true);
+            return;
+          }
+
+          const originalState = {
+            filmBrands: [],
+            filmDates: [],
+          };
+          const showBrandChecked =
+            document.getElementById("showBrandCheckbox").checked;
+          const showDateChecked =
+            document.getElementById("showDateCheckbox").checked;
+
+          const actionButtons =
+            targetElement.querySelectorAll(".image-actions");
+          actionButtons.forEach((btn) => (btn.style.display = "none"));
+
+          const filmBrands = targetElement.querySelectorAll(".film-brand");
+          filmBrands.forEach((el) => {
+            originalState.filmBrands.push(el.style.display);
+            el.style.display = showBrandChecked ? "block" : "none";
+          });
+
+          const filmDates = targetElement.querySelectorAll(".film-date");
+          filmDates.forEach((el) => {
+            originalState.filmDates.push(el.style.display);
+            el.style.display = showDateChecked ? "block" : "none";
+          });
+
+          showNotification("Đang chuẩn bị tải xuống ảnh...", false);
+
+          html2canvas(targetElement, {
+            scale: 2,
+            useCORS: true,
+            logging: true,
+            allowTaint: true,
+          })
+            .then((canvas) => {
+              actionButtons.forEach((btn) => (btn.style.display = "flex"));
+              filmBrands.forEach(
+                (el, index) =>
+                  (el.style.display = originalState.filmBrands[index])
+              );
+              filmDates.forEach(
+                (el, index) =>
+                  (el.style.display = originalState.filmDates[index])
+              );
+
+              const link = document.createElement("a");
+              link.download = `tandev-foto-studio-collection-${Date.now()}.png`;
+              link.href = canvas.toDataURL("image/png");
+              link.click();
+              showNotification("Bộ sưu tập đã được tải xuống thành công!");
+            })
+            .catch((error) => {
+              console.error("Lỗi khi tạo ảnh:", error);
+              actionButtons.forEach((btn) => (btn.style.display = "flex"));
+              filmBrands.forEach(
+                (el, index) =>
+                  (el.style.display = originalState.filmBrands[index])
+              );
+              filmDates.forEach(
+                (el, index) =>
+                  (el.style.display = originalState.filmDates[index])
+              );
+              showNotification("Lỗi khi tạo ảnh. Vui lòng thử lại.", true);
+            });
+        });
+
+        // --- Chức năng Hiển thị Ngày tháng và Nhãn Fujifilm ---
+        const showDateCheckbox = document.getElementById("showDateCheckbox");
+        const showBrandCheckbox = document.getElementById("showBrandCheckbox");
+
+        function updateFilmDetailsVisibility() {
+          const filmDates = document.querySelectorAll(".film-date");
+          const filmBrands = document.querySelectorAll(".film-brand");
+
+          filmDates.forEach((el) => {
+            el.style.display = showDateCheckbox.checked ? "block" : "none";
+          });
+          filmBrands.forEach((el) => {
+            el.style.display = showBrandCheckbox.checked ? "block" : "none";
+          });
+        }
+
+        showDateCheckbox.addEventListener(
+          "change",
+          updateFilmDetailsVisibility
+        );
+        showBrandCheckbox.addEventListener(
+          "change",
+          updateFilmDetailsVisibility
+        );
+        updateFilmDetailsVisibility();
+
+        // Cập nhật preview của filter khi hình ảnh được tải
+        function updateFilterPreviews() {
+          const firstImage = galleryContainer.querySelector(".edited-image");
+          if (firstImage) {
+            const firstImageUrl = firstImage.src;
+            document.querySelectorAll(".filter-preview").forEach((preview) => {
+              preview.style.backgroundImage = `url('${firstImageUrl}')`;
+            });
+          }
+        }
+
+        const observer = new MutationObserver((mutations) => {
+          mutations.forEach((mutation) => {
+            if (
+              mutation.type === "childList" ||
+              mutation.type === "attributes"
+            ) {
+              updateFilterPreviews();
+            }
+          });
+        });
+
+        observer.observe(galleryContainer, {
+          childList: true,
+          subtree: true,
+          attributes: true,
+        });
+
+        // --- Tab Switching Logic ---
+        document.querySelectorAll(".tab-btn").forEach((button) => {
+          button.addEventListener("click", () => {
+            document.querySelectorAll(".tab-btn").forEach((btn) => {
+              btn.classList.remove("active", "text-red-500", "border-red-500");
+              btn.classList.add("border-transparent", "hover:text-gray-600");
+            });
+            document
+              .querySelectorAll(".tab-content")
+              .forEach((content) => content.classList.remove("active"));
+            button.classList.add("active", "text-red-500", "border-red-500");
+            button.classList.remove(
+              "border-transparent",
+              "hover:text-gray-600"
+            );
+            document
+              .getElementById(button.dataset.tab + "Tab")
+              .classList.add("active");
+            showNotification(
+              `Đã chuyển sang tab ${button.textContent.trim()}!`
+            );
+          });
+        });
+
+        // --- Final Initialization ---
+        document
+          .querySelector('#filtersTab .filter-option[data-filter="none"]')
+          .click();
+        updateTextPreview();
+
+        document.querySelector('.frame-type-btn[data-frame="film"]').click();
+        document.querySelector('.frame-color-btn[data-color="white"]').click();
+
+        // --- Chức năng Chia sẻ ---
+        const shareBtn = document.getElementById("shareBtn");
+        const shareModal = document.getElementById("shareModal");
+        const closeShareModal = document.getElementById("closeShareModal");
+        const shareLoading = document.getElementById("shareLoading");
+        const shareContent = document.getElementById("shareContent");
+        const qrcodeDiv = document.getElementById("qrcode");
+        const shareFacebookBtn = document.getElementById("shareFacebook");
+        const shareZaloBtn = document.getElementById("shareZalo");
+        const shareEmailBtn = document.getElementById("shareEmail");
+        const copyLinkBtn = document.getElementById("copyLinkBtn");
+        let shareImageUrl = "";
+
+        async function createShareImage() {
+          const targetElement = document.getElementById("galleryContainer");
+          if (!targetElement.children.length) {
+            showNotification("Không có ảnh nào để chia sẻ.", true);
+            return;
+          }
+
+          shareModal.classList.remove("hidden");
+          shareContent.classList.add("hidden");
+          shareLoading.classList.remove("hidden");
+
+          // Tạm ẩn các nút và chi tiết không mong muốn trước khi chụp ảnh
+          const actionButtons =
+            targetElement.querySelectorAll(".image-actions");
+          const originalActionDisplays = Array.from(actionButtons).map(
+            (btn) => btn.style.display
+          );
+          actionButtons.forEach((btn) => (btn.style.display = "none"));
+          const filmDetails = targetElement.querySelectorAll(
+            ".film-date, .film-brand"
+          );
+          const originalDetailDisplays = Array.from(filmDetails).map(
+            (el) => el.style.display
+          );
+          filmDetails.forEach((el) => (el.style.display = "block"));
+
+          // Lấy màu nền của body để đảm bảo ảnh chụp không bị trong suốt
+          const originalBgColor = document.body.style.backgroundColor;
+          document.body.style.backgroundColor =
+            document.body.classList.contains("dark") ? "#1a1a1a" : "#f8f9fa";
+
+          try {
+            const canvas = await html2canvas(targetElement, {
+              scale: 2,
+              useCORS: true,
+              logging: true,
+              allowTaint: true,
+            });
+
+            // Khôi phục trạng thái ban đầu sau khi chụp ảnh
+            actionButtons.forEach(
+              (btn, index) =>
+                (btn.style.display = originalActionDisplays[index])
+            );
+            filmDetails.forEach(
+              (el, index) => (el.style.display = originalDetailDisplays[index])
+            );
+            document.body.style.backgroundColor = originalBgColor;
+
+            shareLoading.classList.add("hidden");
+            shareContent.classList.remove("hidden");
+
+            return canvas;
+          } catch (error) {
+            console.error("Lỗi khi tạo ảnh:", error);
+            actionButtons.forEach(
+              (btn, index) =>
+                (btn.style.display = originalActionDisplays[index])
+            );
+            filmDetails.forEach(
+              (el, index) => (el.style.display = originalDetailDisplays[index])
+            );
+            document.body.style.backgroundColor = originalBgColor;
+            shareLoading.classList.add("hidden");
+            shareModal.classList.add("hidden");
+            showNotification("Lỗi khi tạo ảnh. Vui lòng thử lại.", true);
+            return null;
+          }
+        }
+
+        shareBtn.addEventListener("click", async () => {
+          const canvas = await createShareImage();
+          if (!canvas) return;
+
+          const shareDataUrl = canvas.toDataURL("image/png");
+          shareImageUrl = shareDataUrl;
+
+          // Xử lý chia sẻ qua QR code và copy link
+          qrcodeDiv.innerHTML = "";
+          new QRCode(qrcodeDiv, {
+            text: shareDataUrl,
+            width: 180,
+            height: 180,
+            colorDark: "#000000",
+            colorLight: "#ffffff",
+            correctLevel: QRCode.CorrectLevel.H,
+          });
+
+          // Gắn sự kiện copy link vào nút
+          copyLinkBtn.onclick = () => {
+            navigator.clipboard
+              .writeText(shareDataUrl)
+              .then(() => showNotification("Đã sao chép link ảnh thành công!"))
+              .catch(() =>
+                showNotification(
+                  "Lỗi khi sao chép link. Vui lòng thử lại.",
+                  true
+                )
+              );
+          };
+
+          // Chức năng chia sẻ qua email
+          const emailSubject = encodeURIComponent(
+            "Bộ sưu tập ảnh film của tôi"
+          );
+          const emailBody = encodeURIComponent(
+            `Chào bạn,\n\nĐây là bộ sưu tập ảnh film độc đáo của tôi được tạo từ Tandev.foto Studio.\n\nBạn có thể tải ảnh này xuống bằng cách quét mã QR hoặc truy cập đường link dưới đây:\n\n${shareDataUrl}\n\nChúc bạn vui vẻ!`
+          );
+          shareEmailBtn.href = `mailto:?subject=${emailSubject}&body=${emailBody}`;
+
+          // Thông báo đã sẵn sàng
+          showNotification("Đã sẵn sàng để chia sẻ!");
+
+          // Gắn sự kiện chia sẻ qua Facebook và Zalo
+          // Các nền tảng này thường không hỗ trợ chia sẻ Data URL trực tiếp,
+          // nên chúng ta sẽ tạo một chức năng để người dùng tải ảnh về trước
+          // rồi tự chia sẻ lên mạng xã hội. Hoặc bạn có thể triển khai thêm
+          // một API backend để lưu ảnh và tạo ra một URL công khai.
+          shareFacebookBtn.onclick = () => {
+            alert(
+              "Để chia sẻ lên Facebook, bạn vui lòng Tải xuống ảnh rồi đăng thủ công lên trang cá nhân hoặc hội nhóm."
+            );
+          };
+
+          shareZaloBtn.onclick = () => {
+            alert(
+              "Để chia sẻ qua Zalo, bạn vui lòng Tải xuống ảnh rồi gửi thủ công cho bạn bè hoặc nhóm."
+            );
+          };
+
+          // Cập nhật button "Tải xuống" để làm rõ hơn
+          shareBtn.querySelector("span").textContent = "Chia sẻ";
+          shareBtn.title = "Chia sẻ bộ sưu tập lên mạng xã hội";
+        });
+
+        closeShareModal.addEventListener("click", () => {
+          shareModal.classList.add("hidden");
+        });
+
+        // Initialize checkbox states and event listeners
+        allFramesCheckboxes.filters.addEventListener("change", (e) => {
+          isEditingAllFrames = e.target.checked;
+          allFramesCheckboxes.effects.checked = e.target.checked;
+          document.querySelectorAll(".film-frame").forEach((frame) => {
+            if (isEditingAllFrames) {
+              frame.classList.add("selected-all");
+              frame.classList.remove("active-edit-frame");
+            } else {
+              frame.classList.remove("selected-all");
+            }
+          });
+          if (isEditingAllFrames) {
+            showNotification(
+              "Đã chọn tất cả khung hình. Mọi thay đổi sẽ được áp dụng đồng bộ."
+            );
+            setActiveFrame(null);
+          } else if (galleryContainer.firstElementChild) {
+            setActiveFrame(galleryContainer.firstElementChild.id);
+          }
+        });
+
+        allFramesCheckboxes.effects.addEventListener("change", (e) => {
+          isEditingAllFrames = e.target.checked;
+          allFramesCheckboxes.filters.checked = e.target.checked;
+          document.querySelectorAll(".film-frame").forEach((frame) => {
+            if (isEditingAllFrames) {
+              frame.classList.add("selected-all");
+              frame.classList.remove("active-edit-frame");
+            } else {
+              frame.classList.remove("selected-all");
+            }
+          });
+          if (isEditingAllFrames) {
+            showNotification(
+              "Đã chọn tất cả khung hình. Mọi thay đổi sẽ được áp dụng đồng bộ."
+            );
+            setActiveFrame(null);
+          } else if (galleryContainer.firstElementChild) {
+            setActiveFrame(galleryContainer.firstElementChild.id);
+          }
+        });
+
+        // --- Chức năng Tách nền tự động bằng AI ---
+        // Thêm sự kiện click cho nút "Tách nền"
+        removeBgBtn.addEventListener("click", async () => {
+          const targetFrames = getTargetFrames();
+          if (targetFrames.length === 0) {
+            showNotification(
+              "Vui lòng chọn một khung ảnh có hình ảnh để tách nền.",
+              true
+            );
+            return;
+          }
+          if (targetFrames.length > 1) {
+            showNotification(
+              "Bạn chỉ có thể tách nền cho một khung ảnh tại một thời điểm.",
+              true
+            );
+            return;
+          }
+
+          const activeFrame = targetFrames[0];
+          const firstImage = activeFrame.querySelector("img");
+          if (!firstImage) {
+            showNotification("Khung ảnh được chọn chưa có hình ảnh.", true);
+            return;
+          }
+          if (activeFrame.classList.contains("processing")) {
+            showNotification("Ảnh đang được xử lý, vui lòng đợi.", true);
+            return;
+          }
+
+          // Hiển thị loading và vô hiệu hóa nút
+          removeBgBtn.disabled = true;
+          removeBgBtnText.textContent = "Đang xử lý...";
+          removeBgSpinner.classList.remove("hidden");
+          activeFrame.classList.add("processing");
+
+          try {
+            // Sử dụng fetch API để tải ảnh gốc
+            const response = await fetch(firstImage.src);
+            if (!response.ok) {
+              throw new Error("Lỗi khi tải ảnh gốc.");
+            }
+            const blob = await response.blob();
+
+            const formData = new FormData();
+            formData.append("image_file", blob, "image.png");
+            formData.append("size", "auto");
+
+            const removeBgResponse = await fetch(
+              "https://api.remove.bg/v1.0/removebg",
+              {
+                method: "POST",
+                headers: {
+                  "X-Api-Key": REMOVE_BG_API_KEY,
+                  Accept: "image/png", // Yêu cầu trả về trực tiếp ảnh
+                },
+                body: formData,
+              }
+            );
+
+            if (!removeBgResponse.ok) {
+              throw new Error(
+                `Lỗi API: ${removeBgResponse.status} ${removeBgResponse.statusText}`
+              );
+            }
+
+            const removedBgBlob = await removeBgResponse.blob();
+            const removedBgImageSrc = URL.createObjectURL(removedBgBlob);
+
+            // Lưu lại ảnh gốc và ảnh đã tách nền vào dataset của frame
+            activeFrame.dataset.originalSrc = firstImage.src;
+            activeFrame.dataset.removedBgSrc = removedBgImageSrc;
+
+            // Áp dụng ảnh đã tách nền
+            firstImage.src = removedBgImageSrc;
+
+            // Cập nhật trạng thái và hiển thị tùy chọn nền
+            backgroundOptionsDiv.classList.remove("hidden");
+            document.getElementById("removeBgBtn").classList.add("hidden");
+            showNotification("Đã tách nền ảnh thành công!");
+          } catch (error) {
+            console.error("Lỗi khi tách nền:", error);
+            showNotification(`Lỗi khi tách nền: ${error.message}`, true);
+          } finally {
+            // Khôi phục trạng thái ban đầu của nút
+            removeBgBtn.disabled = false;
+            removeBgBtnText.textContent = "Tách nền";
+            removeBgSpinner.classList.add("hidden");
+            activeFrame.classList.remove("processing");
+          }
+        });
+
+        // Thêm sự kiện lắng nghe khi người dùng chọn một nền mới
+        backgroundOptionInputs.forEach((input) => {
+          input.addEventListener("change", (e) => {
+            const backgroundValue = e.target.value;
+            const targetFrames = getTargetFrames();
+
+            if (targetFrames.length === 0) {
+              showNotification(
+                "Vui lòng chọn một khung ảnh để áp dụng nền.",
+                true
+              );
+              return;
+            }
+
+            targetFrames.forEach((frame) => {
+              updateImageWithBackground(frame, backgroundValue);
+            });
+
+            showNotification("Đã áp dụng nền mới!");
+          });
+        });
+
+        // Hàm cập nhật hình ảnh với nền mới
+        function updateImageWithBackground(frame, backgroundValue) {
+          const imgContainer = frame.querySelector(".image-container");
+          const img = imgContainer.querySelector("img");
+
+          if (!img || !frame.dataset.removedBgSrc) {
+            // Nếu ảnh chưa được tách nền hoặc không có ảnh, không làm gì cả
+            return;
+          }
+
+          if (backgroundValue === "original") {
+            // Nếu chọn "Nền gốc", khôi phục lại ảnh ban đầu
+            img.src = frame.dataset.originalSrc;
+            // Ẩn lại nút tách nền và tùy chọn nền
+            document.getElementById("removeBgBtn").classList.remove("hidden");
+            backgroundOptionsDiv.classList.add("hidden");
+          } else {
+            // Nếu chọn một nền mới, tạo canvas để kết hợp ảnh đã tách nền và nền mới
+
+            const canvas = document.createElement("canvas");
+            canvas.className = "background-canvas absolute inset-0 -z-10"; // Nền nằm ở lớp dưới
+
+            const removedBgImg = new Image();
+            removedBgImg.crossOrigin = "anonymous";
+            removedBgImg.onload = () => {
+              canvas.width = removedBgImg.width;
+              canvas.height = removedBgImg.height;
+
+              const ctx = canvas.getContext("2d");
+
+              const bgImg = new Image();
+              bgImg.crossOrigin = "anonymous";
+              bgImg.onload = () => {
+                ctx.drawImage(bgImg, 0, 0, canvas.width, canvas.height);
+                ctx.drawImage(removedBgImg, 0, 0, canvas.width, canvas.height);
+                img.src = canvas.toDataURL();
+              };
+
+              // Xử lý các tùy chọn nền màu
+              if (backgroundValue === "white-bg") {
+                bgImg.src =
+                  "data:image/svg+xml;base64," +
+                  btoa(
+                    '<svg xmlns="http://www.w3.org/2000/svg" width="1" height="1"><rect width="1" height="1" fill="white"/></svg>'
+                  );
+              } else if (backgroundValue === "black-bg") {
+                bgImg.src =
+                  "data:image/svg+xml;base64," +
+                  btoa(
+                    '<svg xmlns="http://www.w3.org/2000/svg" width="1" height="1"><rect width="1" height="1" fill="black"/></svg>'
+                  );
+              } else if (backgroundValue === "color-bg") {
+                // Sử dụng Canvas để tạo gradient màu
+                const tempCanvas = document.createElement("canvas");
+                const tempCtx = tempCanvas.getContext("2d");
+                tempCanvas.width = canvas.width;
+                tempCanvas.height = canvas.height;
+                const gradient = tempCtx.createLinearGradient(
+                  0,
+                  0,
+                  tempCanvas.width,
+                  tempCanvas.height
+                );
+                gradient.addColorStop(0, "#ef4444");
+                gradient.addColorStop(0.5, "#facc15");
+                gradient.addColorStop(1, "#22c55e");
+                tempCtx.fillStyle = gradient;
+                tempCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
+                bgImg.src = tempCanvas.toDataURL();
+              } else {
+                bgImg.src = backgroundValue;
+              }
+            };
+            removedBgImg.src = frame.dataset.removedBgSrc;
+          }
+        }
+
+        // Gọi hàm để tạo 4 khung mặc định khi trang web được tải
+        createDefaultPlaceholders();
+      });
+    </script>
+
+
   </body>
 </html>
