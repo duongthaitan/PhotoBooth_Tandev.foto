@@ -4527,30 +4527,31 @@ document
           }
         });
 
-        document
-          .getElementById("switchCameraBtn")
-          .addEventListener("click", async () => {
-            if (videoStream) {
-              videoStream.getTracks().forEach((track) => track.stop());
-            }
-            currentFacingMode =
-              currentFacingMode === "user" ? "environment" : "user";
-            try {
-              const stream = await navigator.mediaDevices.getUserMedia({
+document
+    .getElementById("switchCameraBtn")
+    .addEventListener("click", async () => {
+        if (videoStream) {
+            videoStream.getTracks().forEach((track) => track.stop());
+        }
+        currentFacingMode =
+            currentFacingMode === "user" ? "environment" : "user";
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({
                 video: { facingMode: currentFacingMode },
-              });
-              cameraVideo.srcObject = stream;
-              videoStream = stream;
-              showNotification(
+            });
+            cameraVideo.srcObject = stream;
+            cameraVideo.play(); // SỬA LỖI: Thêm dòng này
+            videoStream = stream;
+            showNotification(
                 `Đã chuyển sang camera ${
-                  currentFacingMode === "user" ? "trước" : "sau"
+                    currentFacingMode === "user" ? "trước" : "sau"
                 }`
-              );
-            } catch (err) {
-              console.error("Lỗi khi chuyển camera: ", err);
-              showNotification("Không thể chuyển đổi camera.", true);
-            }
-          });
+            );
+        } catch (err) {
+            console.error("Lỗi khi chuyển camera: ", err);
+            showNotification("Không thể chuyển đổi camera.", true);
+        }
+    });
 
         // Chức năng chụp 1 ảnh
         document
