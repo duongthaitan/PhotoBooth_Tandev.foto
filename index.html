@@ -602,11 +602,9 @@
 
         .filmstrip-container {
           display: flex;
-          overflow-x: auto;
-          padding: 20px 0;
-          scroll-behavior: smooth;
-          scrollbar-width: thin;
-          scrollbar-color: var(--primary-color) #f0f0f0;
+          flex-wrap: wrap;
+          gap: 1rem;
+          justify-content: center;
         }
 
         .filmstrip-container::-webkit-scrollbar {
@@ -1065,6 +1063,8 @@
 }
 
 
+
+
         .custom-checkbox label {
           cursor: pointer;
         }
@@ -1313,6 +1313,79 @@
           background-color: var(--primary-color);
           border-radius: 3px;
         }
+
+/* --- TỐI ƯU HÓA BỐ CỤC GALLERY --- */
+
+/* Reset cơ bản cho gallery container */
+#galleryContainer {
+    display: grid;
+    gap: 1.5rem; /* Dùng gap-6 của Tailwind */
+    max-width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* --- Các lớp bố cục cụ thể --- */
+
+/* Lưới 4 ảnh/hàng (mặc định cho màn hình lớn) */
+#galleryContainer.layout-grid-4 {
+    grid-template-columns: repeat(4, 1fr);
+}
+
+/* Lưới 2x2 */
+#galleryContainer.layout-grid-2 {
+    grid-template-columns: repeat(2, 1fr);
+}
+
+/* Dải dọc 4 ảnh (1 cột, giới hạn chiều rộng) */
+#galleryContainer.layout-strip-4 {
+    grid-template-columns: 1fr;
+    max-width: 400px; 
+}
+
+/* Dải dọc 2 ảnh (1 cột, giới hạn chiều rộng) */
+#galleryContainer.layout-strip-2 {
+    grid-template-columns: 1fr;
+    max-width: 400px;
+}
+
+/* Bố cục Polaroid (dùng lại lưới 2x2) */
+#galleryContainer.layout-polaroid {
+    grid-template-columns: repeat(2, 1fr);
+}
+
+/* Bố cục Filmstrip (4 ảnh/hàng và tự xuống dòng) */
+#galleryContainer.layout-filmstrip {
+    display: flex; /* Dùng flex để dễ dàng xuống dòng */
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+}
+
+#galleryContainer.layout-filmstrip .film-frame {
+    flex: 1 1 calc(25% - 1rem); /* Mỗi item chiếm ~25% */
+    min-width: 250px; /* Không bị co quá nhỏ */
+}
+
+
+/* --- Điều chỉnh cho màn hình di động --- */
+@media (max-width: 768px) {
+    #galleryContainer.layout-grid-4,
+    #galleryContainer.layout-grid-2,
+    #galleryContainer.layout-polaroid {
+        /* Tất cả các lưới lớn đều chuyển về 2 cột trên di động */
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    #galleryContainer.layout-strip-4,
+    #galleryContainer.layout-strip-2 {
+        /* Các dải dọc chuyển về 1 cột và chiếm hết chiều rộng */
+        max-width: 100%;
+    }
+}
+
+
+
       </style>
     </head>
     <body class="min-h-screen flex flex-col">
@@ -1493,18 +1566,17 @@
               <div class="flex items-center">
                 <label class="text-sm mr-3 font-medium">Bố cục:</label>
                 <div class="tooltip custom-select">
-                  <select
-                    id="layoutSelector"
-                    class="border border-gray-300 rounded-md px-3 py-2 text-sm bg-white focus:border-red-500 focus:ring focus:ring-red-200 focus:ring-opacity-50"
-                  >
-                    <option value="grid">Lưới (2x2)</option>
-                    <option value="vertical">Dọc (1 cột)</option>
-                    <option value="horizontal">Ngang (1 hàng)</option>
-                    <option value="combined">Kết hợp (1 lớn + 3 nhỏ)</option>
-                    <option value="polaroid">Polaroid</option>
-                    <option value="collage">Collage</option>
-                    <option value="filmstrip">Filmstrip</option>
-                  </select>
+<select
+    id="layoutSelector"
+    class="border border-gray-300 rounded-md px-3 py-2 text-sm bg-white focus:border-red-500 focus:ring focus:ring-red-200 focus:ring-opacity-50"
+>
+    <option value="grid-4">Lưới 4 ảnh/hàng</option>
+    <option value="grid-2" selected>Lưới 2x2 (Mặc định)</option>
+    <option value="strip-4">Dải dọc (4 ảnh)</option>
+    <option value="strip-2">Dải dọc (2 ảnh)</option>
+    <option value="polaroid">Polaroid</option>
+    <option value="filmstrip">Filmstrip</option>
+</select>
                   <span class="tooltiptext">Chọn kiểu bố cục cho bộ sưu tập</span>
                 </div>
               </div>
@@ -2645,29 +2717,25 @@
                   </div>
                 </div>
 
-                <div class="custom-checkbox">
-                  <input type="checkbox" id="showDateCheckbox" checked />
-                  <div>
-                    <label for="showDateCheckbox" class="text-sm font-medium"
-                      >Hiển thị ngày tháng</label
-                    >
-                    <p class="text-xs text-gray-500">
-                      Thêm ngày tháng vào góc ảnh
-                    </p>
-                  </div>
-                </div>
+<div class="custom-checkbox">
+    <input type="checkbox" id="showDateCheckbox" />
+    <div>
+        <label for="showDateCheckbox" class="text-sm font-medium">Hiển thị ngày tháng</label>
+        <p class="text-xs text-gray-500">
+            Thêm ngày tháng vào góc ảnh
+        </p>
+    </div>
+</div>
 
-                <div class="custom-checkbox">
-                  <input type="checkbox" id="showBrandCheckbox" checked />
-                  <div>
-                    <label for="showBrandCheckbox" class="text-sm font-medium"
-                      >Hiển thị nhãn Fujifilm</label
-                    >
-                    <p class="text-xs text-gray-500">
-                      Thêm logo Fujifilm vào góc ảnh
-                    </p>
-                  </div>
-                </div>
+<div class="custom-checkbox">
+    <input type="checkbox" id="showBrandCheckbox" />
+    <div>
+        <label for="showBrandCheckbox" class="text-sm font-medium">Hiển thị nhãn Fujifilm</label>
+        <p class="text-xs text-gray-500">
+            Thêm logo Fujifilm vào góc ảnh
+        </p>
+    </div>
+</div>
               </div>
             </div>
 
@@ -3695,46 +3763,53 @@
         currentActiveFrameId = null;
     }
 
-    // --- Chức năng Chuyển đổi Bố cục ---
-    document.getElementById("layoutSelector").addEventListener("change", function() {
-        const layout = this.value;
-        galleryContainer.classList.remove(
-            "grid", "grid-cols-2", "gap-6", "flex", "flex-col", "flex-row", "overflow-x-auto", "pb-4", "collage-layout", "filmstrip-container"
-        );
-        galleryContainer.style.height = "";
 
-        document.querySelectorAll(".film-frame").forEach(frame => {
-            frame.classList.remove("polaroid");
-            frame.style.width = "";
-            frame.style.gridColumn = "";
-            frame.style.gridRow = "";
-        });
 
-        switch (layout) {
-            case "grid":
-                galleryContainer.classList.add("grid", "grid-cols-2", "gap-6");
-                break;
-            case "vertical":
-                galleryContainer.classList.add("flex", "flex-col", "gap-6");
-                break;
-            case "horizontal":
-                galleryContainer.classList.add("flex", "flex-row", "gap-6", "overflow-x-auto", "pb-4", "filmstrip-container");
-                break;
-            case "collage":
-                galleryContainer.classList.add("collage-layout");
-                galleryContainer.style.height = "600px";
-                break;
-            case "filmstrip":
-                galleryContainer.classList.add("filmstrip-container");
-                document.querySelectorAll(".film-frame").forEach(frame => frame.classList.add("filmstrip-layout"));
-                break;
-            case "polaroid":
-                galleryContainer.classList.add("grid", "grid-cols-2", "gap-6");
-                document.querySelectorAll(".film-frame").forEach(frame => frame.classList.add("polaroid"));
-                break;
-        }
-        showNotification(`Đã đổi bố cục sang ${layout}!`);
+
+    // --- Chức năng Chuyển đổi Bố cục (ĐÃ TỐI ƯU) ---
+document.getElementById("layoutSelector").addEventListener("change", function() {
+    const layout = this.value;
+
+    // Reset các class và style cũ
+    galleryContainer.className = 'gallery-container'; // Chỉ giữ lại class cơ bản
+    document.querySelectorAll(".film-frame").forEach(frame => {
+        frame.classList.remove("polaroid");
+        frame.style.flex = ""; // Reset flex property
+        frame.style.minWidth = ""; // Reset min-width
     });
+
+    // Chỉ cần thêm lớp CSS tương ứng
+    galleryContainer.classList.add(`layout-${layout}`);
+    
+    // Xử lý riêng cho trường hợp Polaroid
+    if (layout === 'polaroid') {
+        document.querySelectorAll(".film-frame").forEach(frame => frame.classList.add("polaroid"));
+    }
+
+    // Cắt bớt số lượng khung ảnh nếu cần
+    const frameLimits = {
+        'strip-4': 4,
+        'strip-2': 2,
+        'grid-2x1': 2,
+        'grid-1x2': 2
+    };
+
+    if (frameLimits[layout]) {
+        const allFrames = Array.from(galleryContainer.children);
+        while (allFrames.length > frameLimits[layout]) {
+            const frameToRemove = allFrames.pop();
+            frameToRemove.remove();
+        }
+        while (allFrames.length < frameLimits[layout]) {
+             document.getElementById("addFrameBtn").click();
+             allFrames.push(galleryContainer.lastElementChild);
+        }
+    }
+
+    const layoutText = this.options[this.selectedIndex].text;
+    showNotification(`Đã đổi bố cục sang ${layoutText}!`);
+});
+
 
     // --- Chức năng Áp dụng Bộ lọc (Filters) ---
     const filters = {
@@ -4063,48 +4138,50 @@
         "cat-cute": `https://i.imgur.com/cE5aG1m.png`,
     };
 
-    document.querySelectorAll(".sticker-item").forEach(stickerItem => {
-        stickerItem.addEventListener("click", () => {
-            if (!currentActiveFrameId) {
-                showNotification("Vui lòng chọn một khung ảnh để thêm sticker.", true);
-                return;
-            }
-            const activeFrame = document.getElementById(currentActiveFrameId);
-            const imageContainer = activeFrame ? activeFrame.querySelector(".image-container") : null;
-            if (imageContainer && imageContainer.querySelector("img")) {
-                const stickerType = stickerItem.dataset.sticker;
-                const newSticker = document.createElement("div");
-                newSticker.className = "sticker";
 
-                let stickerContent;
-                if (stickerData[stickerType].startsWith('<svg')) {
-                    stickerContent = stickerData[stickerType];
-                } else {
-                    stickerContent = `<img src="${stickerData[stickerType]}" alt="${stickerType}" class="w-16 h-16 object-contain">`;
-                }
+document.querySelectorAll(".sticker-item").forEach(stickerItem => {
+        stickerItem.addEventListener("click", () => {
+            const targetFrames = getTargetFrames();
+            if (targetFrames.length === 0) {
+                showNotification("Vui lòng chọn một khung ảnh (hoặc tất cả) có ảnh để thêm sticker.", true);
+                return;
+            }
 
-                newSticker.innerHTML = stickerContent + `
-                    <div class="sticker-handle">
-                        <svg class="w-3 h-3 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-5v4m0 0h-4m4 0l-5-5M4 16v4m0 0h4m-4 0l5-5m11 5v-4m0 0h-4m4 0l-5 5"></path>
-                        </svg>
-                    </div>
-                    <button class="sticker-remove">X</button>
-                `;
+            const stickerType = stickerItem.dataset.sticker;
 
-                newSticker.style.width = "64px";
-                newSticker.style.height = "64px";
-                newSticker.style.left = "calc(50% - 32px)";
-                newSticker.style.top = "calc(50% - 32px)";
-                imageContainer.appendChild(newSticker);
-                showNotification(`Đã thêm sticker ${stickerType}!`);
+            targetFrames.forEach(frame => {
+                const imageContainer = frame.querySelector(".image-container");
+                if (imageContainer && imageContainer.querySelector("img")) {
+                    const newSticker = document.createElement("div");
+                    newSticker.className = "sticker";
 
-                setupStickerInteractions(newSticker, imageContainer);
-            } else {
-                showNotification("Vui lòng chọn một khung ảnh CÓ ẢNH để thêm sticker.", true);
-            }
-        });
-    });
+                    let stickerContent;
+                    if (stickerData[stickerType].startsWith('<svg')) {
+                        stickerContent = stickerData[stickerType];
+                    } else {
+                        stickerContent = `<img src="${stickerData[stickerType]}" alt="${stickerType}" class="w-16 h-16 object-contain">`;
+                    }
+
+                    newSticker.innerHTML = stickerContent + `
+                        <div class="sticker-handle">
+                            <svg class="w-3 h-3 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-5v4m0 0h-4m4 0l-5-5M4 16v4m0 0h4m-4 0l5-5m11 5v-4m0 0h-4m4 0l-5 5"></path>
+                            </svg>
+                        </div>
+                        <button class="sticker-remove">X</button>
+                    `;
+
+                    newSticker.style.width = "64px";
+                    newSticker.style.height = "64px";
+                    newSticker.style.left = "calc(50% - 32px)";
+                    newSticker.style.top = "calc(50% - 32px)";
+                    imageContainer.appendChild(newSticker);
+                    setupStickerInteractions(newSticker, imageContainer);
+                }
+            });
+            showNotification(`Đã thêm sticker ${stickerType} cho ${isEditingAllFrames ? 'tất cả' : 'khung hình đang chọn'}!`);
+        });
+    });
 
     function setupStickerInteractions(sticker, container) {
         let isDragging = false;
@@ -4230,100 +4307,122 @@
         takePhotoboothSeries();
     });
 
-    // *** BẮT ĐẦU SỬA LỖI ***
 
-    // SỬA LỖI 1: Tối ưu hóa chức năng chụp 1 ảnh
-    function takeSinglePhoto() {
-        // Vô hiệu hóa các nút bấm để tránh người dùng bấm nhiều lần
-        const takePhotoBtn = document.getElementById('takePhotoBtn');
-        const takePhotoboothBtn = document.getElementById('takePhotoboothBtn');
-        takePhotoBtn.disabled = true;
-        takePhotoboothBtn.disabled = true;
 
-        let countdown = 3;
-        cameraCountdown.textContent = countdown;
-        cameraCountdown.classList.remove("hidden");
-        
-        const interval = setInterval(() => {
-            countdown--;
-            if (countdown > 0) {
-                cameraCountdown.textContent = countdown;
-            } else {
-                clearInterval(interval);
-                cameraCountdown.classList.add("hidden");
-                triggerFlash();
-                const imageDataUrl = captureFrame();
-                processPhoto(imageDataUrl);
+// Sửa lại hoàn toàn chức năng chụp 1 ảnh
+function takeSinglePhoto() {
+    const takePhotoBtn = document.getElementById('takePhotoBtn');
+    const takePhotoboothBtn = document.getElementById('takePhotoboothBtn');
+    takePhotoBtn.disabled = true;
+    takePhotoboothBtn.disabled = true;
 
-                // Kích hoạt lại các nút bấm
-                takePhotoBtn.disabled = false;
-                takePhotoboothBtn.disabled = false;
-                closeCamera.click(); // Tự động đóng camera sau khi chụp
-            }
-        }, 1000);
-    }
+    let countdown = 3;
+    cameraCountdown.textContent = countdown;
+    cameraCountdown.classList.remove("hidden");
     
-    // SỬA LỖI 2: Thay thế hoàn toàn chức năng chụp Photobooth
-    function takePhotoboothSeries() {
-        // 1. Chuẩn bị gallery: Xóa các khung cũ và tạo 4 khung mới
-        galleryContainer.innerHTML = '';
-        for (let i = 0; i < 4; i++) {
-            const newFrame = createPlaceholderFrame(`frame-photobooth-${i}`);
-            galleryContainer.appendChild(newFrame);
+    const interval = setInterval(() => {
+        countdown--;
+        if (countdown > 0) {
+            cameraCountdown.textContent = countdown;
+        } else {
+            clearInterval(interval);
+            cameraCountdown.classList.add("hidden");
+            triggerFlash();
+            const imageDataUrl = captureFrame();
+
+            // SỬA ĐỔI QUAN TRỌNG: Tìm khung trống tiếp theo
+            let targetFrame = findNextEmptyFrame();
+
+            // Nếu không tìm thấy khung trống, tự động tạo một khung mới
+            if (!targetFrame) {
+                document.getElementById("addFrameBtn").click(); // Tận dụng chức năng thêm khung có sẵn
+                targetFrame = document.getElementById(currentActiveFrameId); // Lấy khung vừa được tạo
+            }
+            
+            // Xử lý và chèn ảnh vào khung mục tiêu
+            if (targetFrame) {
+                processPhoto(imageDataUrl, targetFrame.id);
+            } else {
+                showNotification("Không thể thêm ảnh.", true);
+            }
+
+            takePhotoBtn.disabled = false;
+            takePhotoboothBtn.disabled = false;
+            closeCamera.click();
+        }
+    }, 1000);
+}
+    
+  // Sửa lại hoàn toàn chức năng chụp Photobooth (4 tấm)
+function takePhotoboothSeries() {
+    const takePhotoBtn = document.getElementById('takePhotoBtn');
+    const takePhotoboothBtn = document.getElementById('takePhotoboothBtn');
+    takePhotoBtn.disabled = true;
+    takePhotoboothBtn.disabled = true;
+
+    let photoCount = 0;
+    const totalPhotos = 4;
+
+    const runPhotoSequence = () => {
+        // Nếu đã chụp đủ 4 tấm, kết thúc
+        if (photoCount >= totalPhotos) {
+            showNotification("Hoàn thành chụp photobooth!", false);
+            takePhotoBtn.disabled = false;
+            takePhotoboothBtn.disabled = false;
+            closeCamera.click();
+            return;
         }
         
-        // 2. Vô hiệu hóa các nút bấm trong khi chụp
-        const takePhotoBtn = document.getElementById('takePhotoBtn');
-        const takePhotoboothBtn = document.getElementById('takePhotoboothBtn');
-        takePhotoBtn.disabled = true;
-        takePhotoboothBtn.disabled = true;
+        // Bắt đầu đếm ngược cho tấm ảnh hiện tại
+        showNotification(`Chuẩn bị chụp tấm ${photoCount + 1}/${totalPhotos}`);
+        let countdown = 3;
+        photoboothCountdown.textContent = countdown;
+        photoboothCountdown.classList.remove('hidden');
 
-        // 3. Bắt đầu chuỗi chụp ảnh
-        let photoCount = 0;
-        const totalPhotos = 4;
-        
-        const runPhotoSequence = () => {
-            // Nếu đã chụp đủ 4 tấm, kết thúc
-            if (photoCount >= totalPhotos) {
-                showNotification("Hoàn thành chụp photobooth!", false);
-                takePhotoBtn.disabled = false;
-                takePhotoboothBtn.disabled = false;
-                closeCamera.click();
-                return;
-            }
+        const countdownTimer = setInterval(() => {
+            countdown--;
+            if (countdown > 0) {
+                photoboothCountdown.textContent = countdown;
+            } else {
+                clearInterval(countdownTimer);
+                photoboothCountdown.classList.add('hidden');
+                
+                triggerFlash();
+                const imageDataUrl = captureFrame();
 
-            // Bắt đầu đếm ngược cho tấm ảnh hiện tại
-            let countdown = 3;
-            photoboothCountdown.textContent = countdown;
-            photoboothCountdown.classList.remove('hidden');
-
-            const countdownTimer = setInterval(() => {
-                countdown--;
-                if (countdown > 0) {
-                    photoboothCountdown.textContent = countdown;
-                } else {
-                    clearInterval(countdownTimer);
-                    photoboothCountdown.classList.add('hidden');
-                    
-                    triggerFlash();
-                    const imageDataUrl = captureFrame();
-                    const targetFrameId = `frame-photobooth-${photoCount}`;
-                    processPhoto(imageDataUrl, targetFrameId);
-                    
-                    photoCount++;
-                    
-                    // Đợi 1.5 giây trước khi bắt đầu chụp tấm tiếp theo
-                    setTimeout(runPhotoSequence, 1500); 
+                // SỬA ĐỔI QUAN TRỌNG: Tìm khung trống tiếp theo để chèn ảnh
+                let targetFrame = findNextEmptyFrame();
+                if (!targetFrame) {
+                    document.getElementById("addFrameBtn").click();
+                    targetFrame = document.getElementById(currentActiveFrameId);
                 }
-            }, 1000);
-        };
+                processPhoto(imageDataUrl, targetFrame.id);
+                
+                photoCount++;
+                
+                // Đợi một chút trước khi bắt đầu chụp tấm tiếp theo
+                setTimeout(runPhotoSequence, 1500); 
+            }
+        }, 1000);
+    };
 
-        // Bắt đầu chụp tấm ảnh đầu tiên
-        showNotification("Bắt đầu chụp photobooth!");
-        runPhotoSequence();
-    }
+    // Bắt đầu chuỗi chụp
+    runPhotoSequence();
+}
     
-    // *** KẾT THÚC SỬA LỖI ***
+// Hàm hỗ trợ mới: Tìm khung trống đầu tiên có sẵn
+function findNextEmptyFrame() {
+    // Tìm tất cả các phần tử có class 'image-placeholder' trong gallery
+    const placeholders = galleryContainer.querySelectorAll(".image-placeholder");
+    if (placeholders.length > 0) {
+        // Nếu tìm thấy, trả về thẻ cha '.film-frame' của placeholder đầu tiên
+        return placeholders[0].closest(".film-frame");
+    }
+    return null; // Trả về null nếu không còn khung nào trống
+}
+
+
+
 
     function captureFrame() {
         const canvas = document.createElement("canvas");
@@ -4623,44 +4722,47 @@
         shareModal.classList.add("hidden");
     });
 
-    // Initialize checkbox states and event listeners
-    allFramesCheckboxes.filters.addEventListener('change', (e) => {
-        isEditingAllFrames = e.target.checked;
-        allFramesCheckboxes.effects.checked = e.target.checked;
-        document.querySelectorAll('.film-frame').forEach(frame => {
-            if (isEditingAllFrames) {
-                frame.classList.add('selected-all');
-                frame.classList.remove('active-edit-frame');
-            } else {
-                frame.classList.remove('selected-all');
-            }
-        });
-        if (isEditingAllFrames) {
-            showNotification('Đã chọn tất cả khung hình. Mọi thay đổi sẽ được áp dụng đồng bộ.');
-            setActiveFrame(null);
-        } else if (galleryContainer.firstElementChild) {
-            setActiveFrame(galleryContainer.firstElementChild.id);
-        }
-    });
+    // --- Cải tiến: Đồng bộ hóa tất cả các checkbox "Áp dụng cho tất cả" ---
+    const allSelectAllCheckboxes = {
+      filters: document.getElementById('selectAllFrames'),
+      effects: document.getElementById('selectAllEffects'),
+      text: document.getElementById('selectAllText'),
+      stickers: document.getElementById('selectAllStickers')
+    };
 
-    allFramesCheckboxes.effects.addEventListener('change', (e) => {
-        isEditingAllFrames = e.target.checked;
-        allFramesCheckboxes.filters.checked = e.target.checked;
-        document.querySelectorAll('.film-frame').forEach(frame => {
-            if (isEditingAllFrames) {
-                frame.classList.add('selected-all');
-                frame.classList.remove('active-edit-frame');
-            } else {
-                frame.classList.remove('selected-all');
-            }
-        });
-        if (isEditingAllFrames) {
-            showNotification('Đã chọn tất cả khung hình. Mọi thay đổi sẽ được áp dụng đồng bộ.');
-            setActiveFrame(null);
-        } else if (galleryContainer.firstElementChild) {
-            setActiveFrame(galleryContainer.firstElementChild.id);
-        }
-    });
+    // Hàm xử lý thay đổi trạng thái của tất cả checkbox
+    const handleSelectAllChange = (e) => {
+        const isChecked = e.target.checked;
+        isEditingAllFrames = isChecked;
+
+        // Đồng bộ hóa tất cả các checkbox khác
+        for (const key in allSelectAllCheckboxes) {
+            if (allSelectAllCheckboxes[key] !== e.target) {
+                allSelectAllCheckboxes[key].checked = isChecked;
+            }
+        }
+
+        // Áp dụng hiệu ứng visual cho các khung
+        document.querySelectorAll('.film-frame').forEach(frame => {
+            frame.classList.toggle('selected-all', isChecked);
+            if (isChecked) {
+                frame.classList.remove('active-edit-frame');
+            }
+        });
+
+        if (isChecked) {
+            showNotification('Đã chọn tất cả khung hình. Mọi thay đổi sẽ được áp dụng đồng bộ.');
+            currentActiveFrameId = null; // Bỏ chọn khung active
+        } else if (galleryContainer.firstElementChild) {
+            // Khi bỏ chọn, tự động active khung đầu tiên
+            setActiveFrame(galleryContainer.firstElementChild.id);
+        }
+    };
+
+    // Gán sự kiện cho từng checkbox
+    for (const key in allSelectAllCheckboxes) {
+        allSelectAllCheckboxes[key].addEventListener('change', handleSelectAllChange);
+    }
     
     // --- Chức năng Tách nền tự động bằng AI ---
     // Thêm sự kiện click cho nút "Tách nền"
