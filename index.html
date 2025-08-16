@@ -3379,38 +3379,162 @@
         </div>
       </footer>
 
-<div id="cameraModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex justify-center items-center">
-<div class="bg-white rounded-lg shadow-lg overflow-hidden max-w-md w-full">
-<div class="px-4 py-2 bg-gray-100 flex justify-between items-center">
-<div class="font-semibold">
-<svg class="w-6 h-6 inline mr-2 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0010.07 4h3.86a2 2 0 001.664.89l.812 1.22A2 2 0 0118.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path></svg>
-Chụp ảnh
+      <div id="cameraModal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 hidden modal">
+        <div
+          class="bg-white rounded-xl w-full max-w-3xl overflow-hidden modal-content"
+        >
+          <div
+            class="p-4 border-b border-gray-200 flex justify-between items-center modal-header"
+          >
+            <h3 class="font-medium text-lg flex items-center">
+              <svg
+                class="w-5 h-5 mr-2 text-red-500"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"
+                ></path>
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"
+                ></path>
+              </svg>
+              Chụp ảnh
+            </h3>
+            <button
+              id="closeCamera"
+              class="text-gray-500 hover:text-gray-700 transition-colors"
+            >
+              <svg
+                class="w-6 h-6"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M6 18L18 6M6 6l12 12"
+                ></path>
+              </svg>
+            </button>
+          </div>
+
+<div class="p-6">
+  <div class="relative">
+    <video
+      id="cameraVideo"
+      class="w-full h-64 md:h-96 bg-black object-cover rounded-lg"
+      autoplay
+    ></video>
+    <div
+      id="cameraFilterPreview"
+      class="absolute inset-0 pointer-events-none rounded-lg"
+    ></div>
+    <div
+      id="cameraCountdown"
+      class="absolute inset-0 flex items-center justify-center text-white text-6xl font-bold hidden bg-black bg-opacity-50 rounded-lg"
+    ></div>
+    <div id="photoboothCountdown" class="absolute inset-0 flex items-center justify-center text-white text-6xl font-bold hidden bg-black bg-opacity-50 rounded-lg"></div>
+
+    </div>
+
+  <div class="mt-6 flex flex-wrap justify-center gap-3">
+    <div class="tooltip">
+      <button
+        id="switchCameraBtn"
+        class="btn-secondary px-4 py-2 rounded-md"
+      >
+        <svg
+          class="w-5 h-5"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M8 7v4a1 1 0 001 1h4a1 1 0 001-1V7m-4 8v2m4-2v2m-6 0h6a2 2 0 002-2V7a2 2 0 00-2-2H8a2 2 0 00-2 2v6a2 2 0 002 2zm0 0H6v-6h2v6z"
+          ></path>
+        </svg>
+        Chuyển Camera
+      </button>
+      <span class="tooltiptext"
+        >Chuyển đổi giữa camera trước và sau</span
+      >
+    </div>
+
+    <div class="tooltip">
+      <button
+        id="takePhotoBtn"
+        class="btn-primary px-6 py-3 rounded-md"
+      >
+        <svg
+          class="w-6 h-6"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"
+          ></path>
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"
+          ></path>
+        </svg>
+        Chụp 1 ảnh
+      </button>
+      <span class="tooltiptext">Chụp một tấm ảnh duy nhất</span>
+    </div>
+    
+    <div class="tooltip">
+      <button
+        id="takePhotoboothBtn"
+        class="btn-accent px-6 py-3 rounded-md"
+      >
+        <svg
+          class="w-6 h-6"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+          ></path>
+        </svg>
+        Chụp Photobooth
+      </button>
+      <span class="tooltiptext">Chụp 4 ảnh liên tiếp</span>
+    </div>
+  </div>
 </div>
-<button id="closeCamera" class="text-gray-500 hover:text-gray-700">
-<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-</button>
-</div>
-<div class="p-4 relative">
-<video id="cameraVideo" class="w-full rounded-md" autoplay playsinline></video>
-<div id="flash" class="absolute inset-0 bg-white opacity-0 z-10 pointer-events-none"></div>
-<span id="cameraCountdown" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-6xl font-bold text-white z-20 hidden">3</span>
-<span id="photoboothCountdown" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-6xl font-bold text-white z-20 hidden">3</span>
-<div class="absolute top-2 left-2 bg-red-500 text-white text-xs rounded-md px-2 py-1 hidden" id="recIndicator">REC</div>
-<div class="absolute top-2 right-2 bg-gray-200 text-gray-600 text-xs rounded-md px-2 py-1 hidden" id="fujifilmLogo">FUJIFILM</div>
-</div>
-<div class="flex justify-around p-4 bg-gray-100">
-<button id="switchCameraBtn" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus-shadow-outline">
-Đổi camera
-</button>
-<button id="takePhotoBtn" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus-shadow-outline">
-Chụp ảnh
-</button>
-<button id="takePhotoboothBtn" class="bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus-shadow-outline">
-Chụp Photobooth
-</button>
-</div>
-</div>
-</div>
+
+
+        </div>
+      </div>
       
 <script>
   document.addEventListener("DOMContentLoaded", () => {
