@@ -3379,174 +3379,38 @@
         </div>
       </footer>
 
-      <div id="cameraModal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 hidden modal">
-        <div
-          class="bg-white rounded-xl w-full max-w-3xl overflow-hidden modal-content"
-        >
-          <div
-            class="p-4 border-b border-gray-200 flex justify-between items-center modal-header"
-          >
-            <h3 class="font-medium text-lg flex items-center">
-              <svg
-                class="w-5 h-5 mr-2 text-red-500"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"
-                ></path>
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"
-                ></path>
-              </svg>
-              Chụp ảnh
-            </h3>
-            <button
-              id="closeCamera"
-              class="text-gray-500 hover:text-gray-700 transition-colors"
-            >
-              <svg
-                class="w-6 h-6"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M6 18L18 6M6 6l12 12"
-                ></path>
-              </svg>
-            </button>
-          </div>
-
-          <div class="p-6">
-            <div class="relative">
-              <video
-                id="cameraVideo"
-                class="w-full h-64 md:h-96 bg-black object-cover rounded-lg"
-                autoplay
-              ></video>
-              <div
-                id="cameraFilterPreview"
-                class="absolute inset-0 pointer-events-none rounded-lg"
-              ></div>
-              <div
-                id="cameraCountdown"
-                class="absolute inset-0 flex items-center justify-center text-white text-6xl font-bold hidden bg-black bg-opacity-50 rounded-lg"
-              ></div>
-              <div id="photoboothCountdown" class="absolute inset-0 flex items-center justify-center text-white text-6xl font-bold hidden bg-black bg-opacity-50 rounded-lg"></div>
-
-              <div
-                class="absolute top-4 left-4 bg-black bg-opacity-50 text-white px-3 py-1 rounded-full text-xs flex items-center"
-              >
-                <span
-                  class="w-2 h-2 bg-red-500 rounded-full mr-2 animate-pulse"
-                ></span>
-                REC
-              </div>
-
-              <div
-                class="absolute top-4 right-4 bg-black bg-opacity-50 text-white px-3 py-1 rounded-full text-xs"
-              >
-                FUJIFILM
-              </div>
-            </div>
-
-            <div class="mt-6 flex flex-wrap justify-center gap-3">
-              <div class="tooltip">
-                <button
-                  id="switchCameraBtn"
-                  class="btn-secondary px-4 py-2 rounded-md"
-                >
-                  <svg
-                    class="w-5 h-5"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M8 7v4a1 1 0 001 1h4a1 1 0 001-1V7m-4 8v2m4-2v2m-6 0h6a2 2 0 002-2V7a2 2 0 00-2-2H8a2 2 0 00-2 2v6a2 2 0 002 2zm0 0H6v-6h2v6z"
-                    ></path>
-                  </svg>
-                  Chuyển Camera
-                </button>
-                <span class="tooltiptext"
-                  >Chuyển đổi giữa camera trước và sau</span
-                >
-              </div>
-
-              <div class="tooltip">
-                <button
-                  id="takePhotoBtn"
-                  class="btn-primary px-6 py-3 rounded-md"
-                >
-                  <svg
-                    class="w-6 h-6"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"
-                    ></path>
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"
-                    ></path>
-                  </svg>
-                  Chụp 1 ảnh
-                </button>
-                <span class="tooltiptext">Chụp một tấm ảnh duy nhất</span>
-              </div>
-              
-              <div class="tooltip">
-                <button
-                  id="takePhotoboothBtn"
-                  class="btn-accent px-6 py-3 rounded-md"
-                >
-                  <svg
-                    class="w-6 h-6"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
-                    ></path>
-                  </svg>
-                  Chụp Photobooth
-                </button>
-                <span class="tooltiptext">Chụp 4 ảnh liên tiếp</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+<div id="cameraModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex justify-center items-center">
+<div class="bg-white rounded-lg shadow-lg overflow-hidden max-w-md w-full">
+<div class="px-4 py-2 bg-gray-100 flex justify-between items-center">
+<div class="font-semibold">
+<svg class="w-6 h-6 inline mr-2 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0010.07 4h3.86a2 2 0 001.664.89l.812 1.22A2 2 0 0118.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path></svg>
+Chụp ảnh
+</div>
+<button id="closeCamera" class="text-gray-500 hover:text-gray-700">
+<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+</button>
+</div>
+<div class="p-4 relative">
+<video id="cameraVideo" class="w-full rounded-md" autoplay playsinline></video>
+<div id="flash" class="absolute inset-0 bg-white opacity-0 z-10 pointer-events-none"></div>
+<span id="cameraCountdown" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-6xl font-bold text-white z-20 hidden">3</span>
+<span id="photoboothCountdown" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-6xl font-bold text-white z-20 hidden">3</span>
+<div class="absolute top-2 left-2 bg-red-500 text-white text-xs rounded-md px-2 py-1 hidden" id="recIndicator">REC</div>
+<div class="absolute top-2 right-2 bg-gray-200 text-gray-600 text-xs rounded-md px-2 py-1 hidden" id="fujifilmLogo">FUJIFILM</div>
+</div>
+<div class="flex justify-around p-4 bg-gray-100">
+<button id="switchCameraBtn" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus-shadow-outline">
+Đổi camera
+</button>
+<button id="takePhotoBtn" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus-shadow-outline">
+Chụp ảnh
+</button>
+<button id="takePhotoboothBtn" class="bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus-shadow-outline">
+Chụp Photobooth
+</button>
+</div>
+</div>
+</div>
       
 <script>
   document.addEventListener("DOMContentLoaded", () => {
@@ -4360,91 +4224,125 @@
         takePhotoboothSeries();
     });
 
-    function takeSinglePhoto() {
-        triggerFlash();
+    // *** BẮT ĐẦU SỬA LỖI ***
 
-        const countdown = 3;
+    // SỬA LỖI 1: Tối ưu hóa chức năng chụp 1 ảnh
+    function takeSinglePhoto() {
+        // Vô hiệu hóa các nút bấm để tránh người dùng bấm nhiều lần
+        const takePhotoBtn = document.getElementById('takePhotoBtn');
+        const takePhotoboothBtn = document.getElementById('takePhotoboothBtn');
+        takePhotoBtn.disabled = true;
+        takePhotoboothBtn.disabled = true;
+
+        let countdown = 3;
         cameraCountdown.textContent = countdown;
         cameraCountdown.classList.remove("hidden");
-        let count = countdown;
-
+        
         const interval = setInterval(() => {
-            count--;
-            if (count > 0) {
-                cameraCountdown.textContent = count;
+            countdown--;
+            if (countdown > 0) {
+                cameraCountdown.textContent = countdown;
             } else {
                 clearInterval(interval);
                 cameraCountdown.classList.add("hidden");
+                triggerFlash();
                 const imageDataUrl = captureFrame();
                 processPhoto(imageDataUrl);
+
+                // Kích hoạt lại các nút bấm
+                takePhotoBtn.disabled = false;
+                takePhotoboothBtn.disabled = false;
+                closeCamera.click(); // Tự động đóng camera sau khi chụp
             }
         }, 1000);
     }
     
-    // Cập nhật logic cho chức năng chụp Photobooth
-// Cập nhật logic cho chức năng chụp Photobooth
-    function takePhotoboothSeries() {
-        // Tạo 4 khung ảnh nếu chưa có đủ
-        let existingFrames = galleryContainer.querySelectorAll('.film-frame');
-        if (existingFrames.length < 4) {
-            const numToAdd = 4 - existingFrames.length;
-            for (let i = 0; i < numToAdd; i++) {
-                const newFrameId = `frame-${Date.now() + i}`;
-                const newFrame = createPlaceholderFrame(newFrameId);
-                galleryContainer.appendChild(newFrame);
-            }
-        }
-        existingFrames = galleryContainer.querySelectorAll('.film-frame');
-        // Lấy 4 khung ảnh đầu tiên
-        const targetFrames = Array.from(existingFrames).slice(0, 4);
+    // SỬA LỖI 2: Thay thế hoàn toàn chức năng chụp Photobooth
+    function takePhotoboothSeries() {
+        // 1. Chuẩn bị gallery: Xóa các khung cũ và tạo 4 khung mới
+        galleryContainer.innerHTML = '';
+        for (let i = 0; i < 4; i++) {
+            const newFrame = createPlaceholderFrame(`frame-photobooth-${i}`);
+            galleryContainer.appendChild(newFrame);
+        }
+        
+        // 2. Vô hiệu hóa các nút bấm trong khi chụp
+        const takePhotoBtn = document.getElementById('takePhotoBtn');
+        const takePhotoboothBtn = document.getElementById('takePhotoboothBtn');
+        takePhotoBtn.disabled = true;
+        takePhotoboothBtn.disabled = true;
 
-        photoboothCountdown.classList.remove('hidden');
-        let photoCount = 0;
-        const totalPhotos = 4;
-        const countdownInterval = 3000;
+        // 3. Bắt đầu chuỗi chụp ảnh
+        let photoCount = 0;
+        const totalPhotos = 4;
+        
+        const runPhotoSequence = () => {
+            // Nếu đã chụp đủ 4 tấm, kết thúc
+            if (photoCount >= totalPhotos) {
+                showNotification("Hoàn thành chụp photobooth!", false);
+                takePhotoBtn.disabled = false;
+                takePhotoboothBtn.disabled = false;
+                closeCamera.click();
+                return;
+            }
 
-        const timer = setInterval(() => {
-            if (photoCount < totalPhotos) {
-                photoboothCountdown.textContent = totalPhotos - photoCount;
-                if (photoboothCountdown.textContent === "3") {
-                    showNotification(`Bắt đầu chụp photobooth!`);
-                }
-                setTimeout(() => {
+            // Bắt đầu đếm ngược cho tấm ảnh hiện tại
+            let countdown = 3;
+            photoboothCountdown.textContent = countdown;
+            photoboothCountdown.classList.remove('hidden');
+
+            const countdownTimer = setInterval(() => {
+                countdown--;
+                if (countdown > 0) {
+                    photoboothCountdown.textContent = countdown;
+                } else {
+                    clearInterval(countdownTimer);
+                    photoboothCountdown.classList.add('hidden');
+                    
                     triggerFlash();
                     const imageDataUrl = captureFrame();
                     const targetFrameId = `frame-photobooth-${photoCount}`;
                     processPhoto(imageDataUrl, targetFrameId);
+                    
                     photoCount++;
-                }, 500); // Khoảng thời gian giữa đếm ngược và chụp
-            } else {
-                clearInterval(timer);
-                photoboothCountdown.classList.add('hidden');
-                showNotification("Hoàn thành chụp photobooth!", false);
-                closeCamera.click();
-            }
-        }, countdownInterval);
+                    
+                    // Đợi 1.5 giây trước khi bắt đầu chụp tấm tiếp theo
+                    setTimeout(runPhotoSequence, 1500); 
+                }
+            }, 1000);
+        };
+
+        // Bắt đầu chụp tấm ảnh đầu tiên
+        showNotification("Bắt đầu chụp photobooth!");
+        runPhotoSequence();
     }
+    
+    // *** KẾT THÚC SỬA LỖI ***
 
     function captureFrame() {
         const canvas = document.createElement("canvas");
         canvas.width = cameraVideo.videoWidth;
         canvas.height = cameraVideo.videoHeight;
         const context = canvas.getContext("2d");
+        // Lật ảnh ngang (mirror) nếu là camera trước để giống như soi gương
+        if (currentFacingMode === 'user') {
+            context.translate(canvas.width, 0);
+            context.scale(-1, 1);
+        }
         context.drawImage(cameraVideo, 0, 0, canvas.width, canvas.height);
         return canvas.toDataURL("image/png");
     }
     
     // Cập nhật logic processPhoto để có thể chỉ định khung ảnh đích
-// Cập nhật logic processPhoto để có thể chỉ định khung ảnh đích
-    function processPhoto(imageDataUrl, frameId = null) {
-        let targetFrame = frameId ? document.getElementById(frameId) : document.getElementById(currentActiveFrameId);
-        let placeholder = targetFrame ? targetFrame.querySelector(".image-placeholder") : null;
+    function processPhoto(imageDataUrl, frameId = null) {
+        let targetFrame = frameId ? document.getElementById(frameId) : document.getElementById(currentActiveFrameId);
+        let placeholder = targetFrame ? targetFrame.querySelector(".image-placeholder") : null;
 
-        if (!targetFrame || !placeholder) {
-            document.getElementById("addFrameBtn").click();
-            targetFrame = galleryContainer.lastElementChild;
-            placeholder = targetFrame.querySelector(".image-placeholder");
-        }
+        if (!targetFrame || !placeholder) {
+            document.getElementById("addFrameBtn").click();
+            targetFrame = galleryContainer.lastElementChild;
+            placeholder = targetFrame.querySelector(".image-placeholder");
+        }
 
         if (placeholder) {
             const imageContainer = document.createElement("div");
@@ -4903,18 +4801,18 @@
                 } else if (backgroundValue === "black-bg") {
                     bgImg.src = "data:image/svg+xml;base64," + btoa('<svg xmlns="http://www.w3.org/2000/svg" width="1" height="1"><rect width="1" height="1" fill="black"/></svg>');
                 } else if (backgroundValue === "color-bg") {
-                            // Sử dụng Canvas để tạo gradient màu
-                            const tempCanvas = document.createElement('canvas');
-                            const tempCtx = tempCanvas.getContext('2d');
-                            tempCanvas.width = canvas.width;
-                            tempCanvas.height = canvas.height;
-                            const gradient = tempCtx.createLinearGradient(0, 0, tempCanvas.width, tempCanvas.height);
-                            gradient.addColorStop(0, '#ef4444');
-                            gradient.addColorStop(0.5, '#facc15');
-                            gradient.addColorStop(1, '#22c55e');
-                            tempCtx.fillStyle = gradient;
-                            tempCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
-                            bgImg.src = tempCanvas.toDataURL();
+                                // Sử dụng Canvas để tạo gradient màu
+                                const tempCanvas = document.createElement('canvas');
+                                const tempCtx = tempCanvas.getContext('2d');
+                                tempCanvas.width = canvas.width;
+                                tempCanvas.height = canvas.height;
+                                const gradient = tempCtx.createLinearGradient(0, 0, tempCanvas.width, tempCanvas.height);
+                                gradient.addColorStop(0, '#ef4444');
+                                gradient.addColorStop(0.5, '#facc15');
+                                gradient.addColorStop(1, '#22c55e');
+                                tempCtx.fillStyle = gradient;
+                                tempCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
+                                bgImg.src = tempCanvas.toDataURL();
                 } else {
                     bgImg.src = backgroundValue;
                 }
@@ -4925,7 +4823,7 @@
     
     // Gọi hàm để tạo 4 khung mặc định khi trang web được tải
     createDefaultPlaceholders();
-});
+  });
 </script>
 
     </body>
